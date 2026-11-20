@@ -4,525 +4,882 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GM CRED | Gestão</title>
+<title>GM CRED | Gestão Inteligente</title>
+
 <style>
-:root {
-  --gold:#c9a13b;--gold2:#e6c46b;--bg:#101114;
-  --panel:#191a1f;--panel2:#202127;--line:#303139;
-  --white:#f5f5f5;--muted:#96969f;--green:#28b77a;
-  --red:#e35b5b;--blue:#5595ee;
+:root{
+ --gold:#c9a13b;
+ --gold2:#e6c46b;
+ --bg:#101114;
+ --panel:#191a1f;
+ --panel2:#202127;
+ --line:#303139;
+ --white:#f5f5f5;
+ --muted:#96969f;
+ --green:#28b77a;
+ --red:#e35b5b;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--white);
-font-family:Inter,Arial,sans-serif}
+body{
+ margin:0;background:var(--bg);color:var(--white);
+ font-family:Inter,Arial,sans-serif
+}
 button,input,select,textarea{font:inherit}
 button{cursor:pointer}
+.hidden{display:none!important}
+
+.login{
+ max-width:420px;margin:7vh auto;background:var(--panel);
+ border:1px solid var(--line);padding:30px;border-radius:17px
+}
+.logo{
+ font-size:26px;font-weight:900;color:var(--gold);
+ letter-spacing:1px
+}
+.logo small{
+ display:block;font-size:10px;letter-spacing:3px;color:#aaa;
+ margin-top:4px
+}
+.login h2{margin-top:28px}
+.login p{color:var(--muted)}
+.login input{
+ display:block;width:100%;margin:12px 0;
+ background:#111216;color:white;border:1px solid var(--line);
+ padding:13px;border-radius:9px
+}
+.login button{width:100%;margin-top:4px}
+.error{color:#ff8585;font-size:13px;margin-top:10px}
+
+.btn{
+ border:1px solid var(--line);background:#292a30;color:white;
+ padding:10px 15px;border-radius:8px
+}
+.btn.goldbtn{
+ background:var(--gold);color:#151515;
+ border-color:var(--gold);font-weight:800
+}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+
 .app{display:flex;min-height:100vh}
-.sidebar{width:240px;background:#15161a;border-right:1px solid var(--line);
-padding:24px 15px;flex-shrink:0}
-.logo{font-size:25px;font-weight:900;color:var(--gold);padding:5px 12px}
-.logo small{display:block;font-size:10px;letter-spacing:3px;color:#aaa}
+.sidebar{
+ width:240px;background:#15161a;
+ border-right:1px solid var(--line);
+ padding:24px 15px;flex-shrink:0
+}
 .menu{margin-top:35px}
-.menu button{display:block;width:100%;text-align:left;padding:13px 14px;
-margin:5px 0;border:0;border-radius:9px;background:transparent;
-color:#aaa;font-size:14px}
-.menu button.active,.menu button:hover{background:#30291b;color:var(--gold2)}
+.menu button{
+ display:block;width:100%;text-align:left;
+ padding:13px 14px;margin:5px 0;
+ border:0;border-radius:9px;background:transparent;
+ color:#aaa;font-size:14px
+}
+.menu button.active,.menu button:hover{
+ background:#30291b;color:var(--gold2)
+}
+.menu button span{margin-right:9px}
 .main{flex:1;min-width:0}
-.top{height:75px;border-bottom:1px solid var(--line);display:flex;
-align-items:center;justify-content:space-between;padding:0 28px}
+.top{
+ height:75px;border-bottom:1px solid var(--line);
+ display:flex;align-items:center;justify-content:space-between;
+ padding:0 28px
+}
 .top h2{font-size:18px;margin:0}
 .content{padding:28px;max-width:1500px;margin:auto}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
-.card{background:var(--panel);border:1px solid var(--line);
-border-radius:13px;padding:19px}
+.grid{
+ display:grid;grid-template-columns:repeat(4,1fr);gap:15px
+}
+.card{
+ background:var(--panel);border:1px solid var(--line);
+ border-radius:13px;padding:19px
+}
 .card small{color:var(--muted)}
 .value{font-size:26px;font-weight:800;margin-top:12px}
 .gold{color:var(--gold2)}
 .section{margin-top:25px}
 .section h3{font-size:16px;margin-bottom:15px}
 .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px}
-input,select,textarea{background:#111216;color:white;border:1px solid var(--line);
-border-radius:8px;padding:11px;outline:none}
-input:focus,select:focus,textarea:focus{border-color:var(--gold)}
 .toolbar input{flex:1;min-width:180px}
-.btn{border:1px solid var(--line);background:#292a30;color:white;
-padding:10px 15px;border-radius:8px}
-.btn.goldbtn{background:var(--gold);color:#151515;border-color:var(--gold);
-font-weight:800}
-.btn:disabled{opacity:.4;cursor:not-allowed}
-.tablewrap{overflow:auto;background:var(--panel);border:1px solid var(--line);
-border-radius:12px}
+input,select,textarea{
+ background:#111216;color:white;border:1px solid var(--line);
+ border-radius:8px;padding:11px;outline:none
+}
+input:focus,select:focus,textarea:focus{border-color:var(--gold)}
+.tablewrap{
+ overflow:auto;background:var(--panel);
+ border:1px solid var(--line);border-radius:12px
+}
 table{width:100%;border-collapse:collapse;min-width:650px}
-th,td{text-align:left;padding:13px 15px;border-bottom:1px solid var(--line);
-font-size:13px}
+th,td{
+ text-align:left;padding:13px 15px;
+ border-bottom:1px solid var(--line);font-size:13px
+}
 th{color:var(--muted);font-weight:600}
 tr:hover td{background:#222329}
-.status{padding:5px 9px;border-radius:20px;font-size:11px;
-background:#292a30;color:#ccc}
+.status{
+ padding:5px 9px;border-radius:20px;font-size:11px;
+ background:#292a30;color:#ccc
+}
 .status.green{background:#143c2e;color:#5ee0a6}
 .status.red{background:#421f24;color:#ff8d8d}
 .status.yellow{background:#40371f;color:#f0ce75}
-.hidden{display:none!important}
 .muted{color:var(--muted)}
+.notice{
+ padding:13px;background:#30291b;color:var(--gold2);
+ border-radius:9px;font-size:13px;margin-bottom:15px
+}
 .form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.form label{display:flex;flex-direction:column;gap:7px;
-font-size:12px;color:var(--muted)}
+.form label{
+ display:flex;flex-direction:column;gap:7px;
+ font-size:12px;color:var(--muted)
+}
 .form .full{grid-column:1/-1}
-.login{max-width:420px;margin:12vh auto;background:var(--panel);
-border:1px solid var(--line);padding:30px;border-radius:16px}
-.login input{width:100%;margin:10px 0}
-.chat{height:420px;overflow:auto;background:#111216;
-border:1px solid var(--line);border-radius:10px;padding:15px}
-.msg{max-width:80%;padding:10px 13px;border-radius:10px;
-margin:8px 0;font-size:13px;white-space:pre-wrap}
+.chat{
+ height:420px;overflow:auto;background:#111216;
+ border:1px solid var(--line);border-radius:10px;padding:15px
+}
+.msg{
+ max-width:80%;padding:10px 13px;border-radius:10px;
+ margin:8px 0;font-size:13px;white-space:pre-wrap
+}
 .msg.in{background:#282930}
 .msg.out{background:#254333;margin-left:auto}
 .chatbar{display:flex;gap:8px;margin-top:10px}
 .chatbar input{flex:1}
-.notice{padding:13px;background:#30291b;color:var(--gold2);
-border-radius:9px;font-size:13px;margin-bottom:15px}
-.error{color:#ff8b8b;font-size:13px;margin-top:10px}
 @media(max-width:850px){
-.sidebar{width:65px;padding:15px 5px}
-.logo{font-size:17px;padding:5px}
-.logo small{display:none}
-.menu button{font-size:0;text-align:center;padding:14px 3px}
-.menu button span{font-size:17px}
-.content{padding:15px}
-.grid{grid-template-columns:1fr 1fr}
-.top{padding:0 15px}
+ .sidebar{width:65px;padding:15px 5px}
+ .logo{font-size:17px;padding:5px}
+ .logo small{display:none}
+ .menu button{font-size:0;text-align:center;padding:14px 3px}
+ .menu button span{font-size:17px;margin:0}
+ .content{padding:15px}
+ .grid{grid-template-columns:1fr 1fr}
+ .top{padding:0 15px}
 }
 @media(max-width:520px){
-.grid{grid-template-columns:1fr 1fr}
-.form{grid-template-columns:1fr}
-.form .full{grid-column:auto}
+ .form{grid-template-columns:1fr}
+ .form .full{grid-column:auto}
 }
 </style>
 </head>
+
 <body>
 
 <div id="login" class="login">
-  <div class="logo">GM CRED<small>GESTÃO INTELIGENTE</small></div>
-  <h2>Entrar no painel</h2>
-  <p class="muted">Conecte ao servidor da operação.</p>
-  <input id="server" placeholder="URL do servidor n8n"
-  value="https://rarelookingorca-n8n.cloudfy.live">
-  <input id="masterKey" type="password" placeholder="Chave de acesso">
-  <button class="btn goldbtn" style="width:100%" onclick="login()">ENTRAR</button>
-  <div id="loginError" class="error"></div>
+ <div class="logo">GM CRED<small>GESTÃO INTELIGENTE</small></div>
+
+ <h2>Entrar no painel</h2>
+ <p>Conecte ao servidor da operação.</p>
+
+ <input id="server"
+  placeholder="URL do servidor"
+  value="https://rarelookingorca-n8n.cloudfy.live/webhook">
+
+ <input id="masterKey" type="password"
+  placeholder="Chave de acesso">
+
+ <button class="btn goldbtn" onclick="login()">ENTRAR</button>
+ <div id="loginError" class="error"></div>
 </div>
 
 <div id="app" class="app hidden">
-  <aside class="sidebar">
-    <div class="logo">GM<small>CRED</small></div>
-    <nav class="menu">
-      <button class="active" onclick="page('dashboard',this)"><span>◫</span> Visão geral</button>
-      <button onclick="page('clientes',this)"><span>♙</span> Clientes</button>
-      <button onclick="page('conversas',this)"><span>◉</span> WhatsApp</button>
-      <button onclick="page('propostas',this)"><span>▤</span> Propostas</button>
-      <button onclick="page('financeiro',this)"><span>＄</span> Financeiro</button>
-      <button onclick="page('consultas',this)"><span>⌕</span> Consultas</button>
-      <button onclick="page('config',this)"><span>⚙</span> Configurações</button>
-    </nav>
-  </aside>
 
-  <main class="main">
-    <header class="top">
-      <h2 id="pageTitle">Visão geral</h2>
-      <div>
-        <span id="connection" class="status">Conectando</span>
-        <button class="btn" onclick="refresh()">↻ Atualizar</button>
-      </div>
-    </header>
-    <div class="content">
+ <aside class="sidebar">
+  <div class="logo">GM<small>CRED</small></div>
 
-      <section id="dashboard">
-        <div class="grid">
-          <div class="card"><small>Clientes em andamento</small><div class="value gold" id="kActive">—</div></div>
-          <div class="card"><small>Contratos pagos</small><div class="value" id="kPaid">—</div></div>
-          <div class="card"><small>Valor liberado</small><div class="value" id="kReleased">—</div></div>
-          <div class="card"><small>Comissão</small><div class="value gold" id="kCommission">—</div></div>
-        </div>
-        <div class="section card">
-          <h3>Resumo da operação</h3>
-          <div id="summary" class="muted">Carregando dados...</div>
-        </div>
-      </section>
+  <nav class="menu">
+   <button class="active" onclick="page('dashboard',this)">
+    <span>◫</span> Visão geral
+   </button>
+   <button onclick="page('clientes',this)">
+    <span>♙</span> Clientes
+   </button>
+   <button onclick="page('conversas',this)">
+    <span>◉</span> WhatsApp
+   </button>
+   <button onclick="page('propostas',this)">
+    <span>▤</span> Propostas
+   </button>
+   <button onclick="page('financeiro',this)">
+    <span>＄</span> Financeiro
+   </button>
+   <button onclick="page('consultas',this)">
+    <span>⌕</span> Consultas
+   </button>
+   <button onclick="page('config',this)">
+    <span>⚙</span> Configurações
+   </button>
+  </nav>
+ </aside>
 
-      <section id="clientes" class="hidden">
-        <div class="toolbar">
-          <input id="clientSearch" placeholder="Buscar por nome, CPF ou telefone" oninput="renderClients()">
-          <button class="btn" onclick="loadClients()">Atualizar clientes</button>
-        </div>
-        <div class="tablewrap"><table>
-          <thead><tr><th>Cliente</th><th>CPF</th><th>Produto</th><th>Situação</th><th>Valor</th><th></th></tr></thead>
-          <tbody id="clientRows"></tbody>
-        </table></div>
-      </section>
+ <main class="main">
+  <header class="top">
+   <h2 id="pageTitle">Visão geral</h2>
+   <div>
+    <span id="connection" class="status">Aguardando</span>
+    <button class="btn" onclick="refresh()">↻ Atualizar</button>
+   </div>
+  </header>
 
-      <section id="conversas" class="hidden">
-        <div class="toolbar">
-          <input id="chatSearch" placeholder="Buscar conversa" oninput="renderChats()">
-          <button class="btn" onclick="loadChats()">Atualizar</button>
-        </div>
-        <div class="grid" style="grid-template-columns:minmax(220px,1fr) 2fr">
-          <div class="card" id="chatList">Carregando...</div>
-          <div class="card">
-            <div id="chatHeader">Selecione uma conversa</div>
-            <div class="chat" id="chatMessages"></div>
-            <div class="chatbar">
-              <input id="chatText" placeholder="Digite sua mensagem">
-              <button class="btn goldbtn" onclick="sendMessage()">Enviar</button>
-            </div>
-            <div style="margin-top:10px">
-              <button class="btn" onclick="returnAI()">Devolver para IA</button>
-            </div>
-          </div>
-        </div>
-      </section>
+  <div class="content">
 
-      <section id="propostas" class="hidden">
-        <div class="notice">Os status apresentados vêm dos dados reais do painel. A confirmação de pagamento depende do acompanhamento da proposta no backend.</div>
-        <div class="tablewrap"><table>
-          <thead><tr><th>Cliente</th><th>CPF</th><th>Produto</th><th>Situação</th><th>Valor da oferta</th><th>Última atualização</th></tr></thead>
-          <tbody id="proposalRows"></tbody>
-        </table></div>
-      </section>
-
-      <section id="financeiro" class="hidden">
-        <div class="grid">
-          <div class="card"><small>Receita</small><div class="value gold" id="finRevenue">—</div></div>
-          <div class="card"><small>Gastos</small><div class="value" id="finCosts">—</div></div>
-          <div class="card"><small>Lucro</small><div class="value" id="finProfit">—</div></div>
-          <div class="card"><small>Contratos pagos</small><div class="value" id="finPaid">—</div></div>
-        </div>
-        <div class="section card">
-          <h3>Lançar despesa</h3>
-          <div class="form">
-            <label>Valor<input id="costValue" placeholder="150,00"></label>
-            <label>Data<input id="costDate" type="date"></label>
-            <label>Categoria<select id="costCategory">
-              <option value="disparos">Disparos</option>
-              <option value="trafego">Tráfego pago</option>
-              <option value="bms">BMs</option>
-              <option value="outros">Outros</option>
-            </select></label>
-            <label>Descrição<input id="costDescription"></label>
-          </div>
-          <button class="btn goldbtn" style="margin-top:15px" onclick="saveCost()">Salvar despesa</button>
-        </div>
-        <div class="section tablewrap"><table>
-          <thead><tr><th>Data</th><th>Categoria</th><th>Descrição</th><th>Valor</th><th></th></tr></thead>
-          <tbody id="costRows"></tbody>
-        </table></div>
-      </section>
-
-      <section id="consultas" class="hidden">
-        <div class="notice">
-          As consultas CLT e FGTS são processadas pela HUB na operação.
-          O branch contém os fluxos internos do n8n, mas não expõe uma rota
-          pública de consulta manual HUB no painel atual.
-        </div>
-        <div class="grid">
-          <div class="card">
-            <h3>Crédito CLT · HUB</h3>
-            <p class="muted">Consulta manual ainda precisa de uma rota segura no backend.</p>
-            <span class="status yellow">Integração não exposta</span>
-          </div>
-          <div class="card">
-            <h3>FGTS · HUB</h3>
-            <p class="muted">Fluxo interno GM Cred · HUB FGTS encontrado no n8n.</p>
-            <span class="status yellow">Integração não exposta</span>
-          </div>
-        </div>
-      </section>
-
-      <section id="config" class="hidden">
-        <div class="card">
-          <h3>Conexão do servidor</h3>
-          <label class="muted">URL base</label>
-          <input id="configServer" style="width:100%">
-          <button class="btn goldbtn" style="margin-top:12px" onclick="saveConfig()">Salvar URL</button>
-          <p class="muted">A chave mestra não fica salva no navegador. O painel utiliza o token temporário de sessão.</p>
-          <button class="btn" onclick="logout()">Sair</button>
-        </div>
-      </section>
-
-      <section id="clientDetail" class="hidden">
-        <button class="btn" onclick="page('clientes')">← Voltar</button>
-        <div class="section card" id="clientInfo">Carregando ficha...</div>
-      </section>
-
+   <section id="dashboard">
+    <div class="grid">
+     <div class="card">
+      <small>Clientes em andamento</small>
+      <div class="value gold" id="kActive">—</div>
+     </div>
+     <div class="card">
+      <small>Contratos pagos</small>
+      <div class="value" id="kPaid">—</div>
+     </div>
+     <div class="card">
+      <small>Valor liberado</small>
+      <div class="value" id="kReleased">—</div>
+     </div>
+     <div class="card">
+      <small>Comissão</small>
+      <div class="value gold" id="kCommission">—</div>
+     </div>
     </div>
-  </main>
+
+    <div class="section card">
+     <h3>Resumo da operação</h3>
+     <div id="summary" class="muted">Aguardando dados...</div>
+    </div>
+   </section>
+
+   <section id="clientes" class="hidden">
+    <div class="toolbar">
+     <input id="clientSearch"
+      placeholder="Buscar nome, CPF ou telefone"
+      oninput="renderClients()">
+     <button class="btn" onclick="loadClients()">Atualizar</button>
+    </div>
+    <div class="tablewrap">
+     <table>
+      <thead>
+       <tr>
+        <th>Cliente</th><th>CPF</th><th>Produto</th>
+        <th>Situação</th><th>Valor</th><th></th>
+       </tr>
+      </thead>
+      <tbody id="clientRows"></tbody>
+     </table>
+    </div>
+   </section>
+
+   <section id="conversas" class="hidden">
+    <div class="toolbar">
+     <input id="chatSearch" placeholder="Buscar conversa"
+      oninput="renderChats()">
+     <button class="btn" onclick="loadChats()">Atualizar</button>
+    </div>
+
+    <div class="grid" style="grid-template-columns:minmax(220px,1fr) 2fr">
+     <div class="card" id="chatList">Carregando...</div>
+
+     <div class="card">
+      <div id="chatHeader">Selecione uma conversa</div>
+      <div class="chat" id="chatMessages"></div>
+
+      <div class="chatbar">
+       <input id="chatText" placeholder="Digite sua mensagem">
+       <button class="btn goldbtn" onclick="sendMessage()">Enviar</button>
+      </div>
+
+      <div style="margin-top:10px">
+       <button class="btn" onclick="returnAI()">Devolver para IA</button>
+      </div>
+     </div>
+    </div>
+   </section>
+
+   <section id="propostas" class="hidden">
+    <div class="notice">
+     Acompanhamento das propostas conforme os dados disponibilizados pelo painel.
+    </div>
+    <div class="tablewrap">
+     <table>
+      <thead>
+       <tr>
+        <th>Cliente</th><th>CPF</th><th>Produto</th>
+        <th>Situação</th><th>Valor</th><th>Atualização</th>
+       </tr>
+      </thead>
+      <tbody id="proposalRows"></tbody>
+     </table>
+    </div>
+   </section>
+
+   <section id="financeiro" class="hidden">
+    <div class="grid">
+     <div class="card"><small>Receita</small><div class="value gold" id="finRevenue">—</div></div>
+     <div class="card"><small>Gastos</small><div class="value" id="finCosts">—</div></div>
+     <div class="card"><small>Lucro</small><div class="value" id="finProfit">—</div></div>
+     <div class="card"><small>Contratos pagos</small><div class="value" id="finPaid">—</div></div>
+    </div>
+
+    <div class="section card">
+     <h3>Lançar despesa</h3>
+     <div class="form">
+      <label>Valor<input id="costValue" placeholder="150,00"></label>
+      <label>Data<input id="costDate" type="date"></label>
+      <label>Categoria
+       <select id="costCategory">
+        <option value="disparos">Disparos</option>
+        <option value="trafego">Tráfego pago</option>
+        <option value="bms">BMs</option>
+        <option value="outros">Outros</option>
+       </select>
+      </label>
+      <label>Descrição<input id="costDescription"></label>
+     </div>
+     <button class="btn goldbtn" style="margin-top:15px"
+      onclick="saveCost()">Salvar despesa</button>
+    </div>
+
+    <div class="section tablewrap">
+     <table>
+      <thead>
+       <tr><th>Data</th><th>Categoria</th><th>Descrição</th><th>Valor</th><th></th></tr>
+      </thead>
+      <tbody id="costRows"></tbody>
+     </table>
+    </div>
+   </section>
+
+   <section id="consultas" class="hidden">
+    <div class="notice">
+     As consultas CLT e FGTS utilizam a HUB na operação.
+     O fluxo interno foi encontrado no projeto, mas ainda não foi
+     identificada uma rota pública para consulta manual pelo painel.
+    </div>
+
+    <div class="grid">
+     <div class="card">
+      <h3>Crédito CLT · HUB</h3>
+      <p class="muted">Aguardando rota autenticada de consulta manual.</p>
+      <span class="status yellow">Não exposta no backend</span>
+     </div>
+     <div class="card">
+      <h3>FGTS · HUB</h3>
+      <p class="muted">Fluxo interno GM Cred · HUB FGTS identificado.</p>
+      <span class="status yellow">Não exposta no backend</span>
+     </div>
+    </div>
+   </section>
+
+   <section id="config" class="hidden">
+    <div class="card">
+     <h3>Configuração do servidor</h3>
+     <label class="muted">URL base do webhook</label>
+     <input id="configServer" style="width:100%">
+     <button class="btn goldbtn" style="margin-top:12px"
+      onclick="saveConfig()">Salvar URL</button>
+     <p class="muted">
+      A chave mestra não fica salva no navegador.
+      O painel utiliza um token temporário de sessão.
+     </p>
+     <button class="btn" onclick="logout()">Sair</button>
+    </div>
+   </section>
+
+   <section id="clientDetail" class="hidden">
+    <button class="btn" onclick="page('clientes')">← Voltar</button>
+    <div class="section card" id="clientInfo">Carregando ficha...</div>
+   </section>
+
+  </div>
+ </main>
 </div>
 
 <script>
 const $=id=>document.getElementById(id);
-let BASE=localStorage.getItem('gm_api')||'https://rarelookingorca-n8n.cloudfy.live';
-let token=sessionStorage.getItem('gm_token')||'';
-let state={},clients=[],chats=[],selectedChat=null,finance={};
+
+let BASE=localStorage.getItem('gm_api') ||
+ 'https://rarelookingorca-n8n.cloudfy.live/webhook';
+
+let token=sessionStorage.getItem('gm_token') || '';
+let state={};
+let clients=[];
+let chats=[];
+let selectedChat=null;
+let finance={};
+
+/* Normaliza a URL para sempre terminar em /webhook */
+function normalizeBase(value){
+ let url=String(value||'').trim().replace(/\/+$/,'');
+ url=url.replace(/\/escritorio\/estado$/,'');
+ if(!url.endsWith('/webhook'))url+='/webhook';
+ return url;
+}
 
 const money=v=>(Number(v)||0).toLocaleString('pt-BR',{
  style:'currency',currency:'BRL'
 });
-const digits=v=>String(v||'').replace(/\D/g,'');
 
-async function request(path,method='GET',data={}){
- const url=BASE+path;
- let options={method,cache:'no-store'};
- if(method==='GET'){
-  const u=new URL(url);
-  Object.entries(data).forEach(([k,v])=>u.searchParams.set(k,v));
-  options.url=u.toString();
-  const r=await fetch(options.url,{method,cache:'no-store'});
-  if(r.status===401)throw Error('Sessão expirada');
-  if(!r.ok)throw Error('HTTP '+r.status);
-  return r.json();
- }
- const body=new URLSearchParams(data);
- const r=await fetch(url,{method,body});
- if(r.status===401)throw Error('Sessão expirada');
- if(!r.ok)throw Error('HTTP '+r.status);
- return r.json();
+function escapeHtml(v){
+ return String(v??'').replace(/[&<>"']/g,c=>({
+  '&':'&amp;',
+  '<':'&lt;',
+  '>':'&gt;',
+  '"':'&quot;',
+  "'":'&#39;'
+ }[c]));
 }
 
+/* Comunicação com o backend */
+async function request(path,method='GET',data={}){
+ const url=BASE+path;
+ let response;
+
+ if(method==='GET'){
+  const u=new URL(url);
+  Object.entries(data).forEach(([k,v])=>{
+   if(v!==undefined&&v!==null)u.searchParams.set(k,v);
+  });
+  response=await fetch(u.toString(),{
+   method:'GET',
+   cache:'no-store'
+  });
+ }else{
+  const body=new URLSearchParams();
+  Object.entries(data).forEach(([k,v])=>{
+   if(v!==undefined&&v!==null)body.set(k,v);
+  });
+
+  response=await fetch(url,{
+   method:'POST',
+   body
+  });
+ }
+
+ if(response.status===401){
+  throw new Error('Acesso não autorizado. Verifique sua chave ou faça login novamente.');
+ }
+
+ if(!response.ok){
+  throw new Error('Erro HTTP '+response.status);
+ }
+
+ return response.json();
+}
+
+/* LOGIN */
 async function login(){
- BASE=$('server').value.trim().replace(/\/$/,'');
+ BASE=normalizeBase($('server').value);
  const key=$('masterKey').value.trim();
- if(!BASE||!key)return $('loginError').textContent='Informe servidor e chave.';
+
+ if(!key){
+  $('loginError').textContent='Digite sua chave de acesso.';
+  return;
+ }
+
+ $('loginError').textContent='Conectando...';
+
  try{
-  const r=await request('/escritorio/login','POST',{k:key});
-  if(!r.token)throw Error('Servidor não retornou token.');
-  token=r.token;sessionStorage.setItem('gm_token',token);
+  const result=await request('/escritorio/login','POST',{k:key});
+
+  if(!result.token){
+   throw new Error(result.erro||'O servidor não retornou o token de sessão.');
+  }
+
+  token=result.token;
+
+  sessionStorage.setItem('gm_token',token);
   localStorage.setItem('gm_api',BASE);
+
   $('login').classList.add('hidden');
   $('app').classList.remove('hidden');
   $('configServer').value=BASE;
+
+  $('masterKey').value='';
   await refresh();
- }catch(e){$('loginError').textContent=e.message;}
+
+ }catch(error){
+  $('loginError').textContent=error.message;
+  console.error('Erro no login:',error);
+ }
 }
 
+/* SAIR */
 function logout(){
- token='';sessionStorage.removeItem('gm_token');
- $('app').classList.add('hidden');$('login').classList.remove('hidden');
+ token='';
+ sessionStorage.removeItem('gm_token');
+ $('app').classList.add('hidden');
+ $('login').classList.remove('hidden');
+ $('loginError').textContent='';
 }
 
+/* NAVEGAÇÃO */
 function page(id,button){
- document.querySelectorAll('.content>section').forEach(x=>x.classList.add('hidden'));
+ document.querySelectorAll('.content>section').forEach(section=>{
+  section.classList.add('hidden');
+ });
+
  $(id).classList.remove('hidden');
- document.querySelectorAll('.menu button').forEach(x=>x.classList.remove('active'));
+
+ document.querySelectorAll('.menu button').forEach(b=>{
+  b.classList.remove('active');
+ });
+
  if(button)button.classList.add('active');
- const titles={dashboard:'Visão geral',clientes:'Clientes',conversas:'WhatsApp',
- propostas:'Propostas',financeiro:'Financeiro',consultas:'Consultas',config:'Configurações'};
+
+ const titles={
+  dashboard:'Visão geral',
+  clientes:'Clientes',
+  conversas:'WhatsApp',
+  propostas:'Propostas',
+  financeiro:'Financeiro',
+  consultas:'Consultas',
+  config:'Configurações',
+  clientDetail:'Ficha do cliente'
+ };
+
  $('pageTitle').textContent=titles[id]||'Cliente';
+
  if(id==='clientes')loadClients();
  if(id==='conversas')loadChats();
  if(id==='financeiro')loadFinance();
  if(id==='propostas')renderProposals();
 }
 
+/* PAINEL PRINCIPAL */
 async function refresh(){
  if(!token)return;
+
  try{
-  state=await request('/webhook/escritorio/estado','GET',{
-   k:token,teste:'0',partes:'crm'
+  state=await request('/escritorio/estado','GET',{
+   k:token,
+   teste:'0',
+   partes:'crm'
   });
+
   $('connection').textContent='Servidor conectado';
   $('connection').className='status green';
+
   renderDashboard();
-  clients=state.crm||[];
+
+  clients=Array.isArray(state.crm)?state.crm:[];
   renderClients();
   renderProposals();
- }catch(e){
+
+ }catch(error){
   $('connection').textContent='Erro de conexão';
   $('connection').className='status red';
-  console.error(e);
+  console.error('Erro ao carregar painel:',error);
  }
 }
 
+/* INDICADORES */
 function renderDashboard(){
  const r=state.resumo||{};
  const n=r.numeros||{};
+
  $('kActive').textContent=r.em_andamento??'—';
  $('kPaid').textContent=n.pagos??'—';
  $('kReleased').textContent=money(n.liberado);
  $('kCommission').textContent=money(n.comissao);
+
  $('summary').innerHTML=`
- <p>Entraram: <b>${n.entraram??0}</b></p>
- <p>Simularam: <b>${n.simularam??0}</b></p>
- <p>Propostas: <b>${n.propostas??0}</b></p>
- <p>Assinaram: <b>${n.assinaram??0}</b></p>
- <p>Pagos: <b>${n.pagos??0}</b></p>`;
+  <p>Entraram: <b>${n.entraram??0}</b></p>
+  <p>Simularam: <b>${n.simularam??0}</b></p>
+  <p>Propostas: <b>${n.propostas??0}</b></p>
+  <p>Assinaram: <b>${n.assinaram??0}</b></p>
+  <p>Pagos: <b>${n.pagos??0}</b></p>
+ `;
 }
 
+/* CLIENTES */
 async function loadClients(){
  try{
   if(!state.crm)await refresh();
-  clients=state.crm||[];
+  clients=Array.isArray(state.crm)?state.crm:[];
   renderClients();
- }catch(e){alert(e.message);}
+ }catch(error){
+  alert(error.message);
+ }
 }
 
 function renderClients(){
  const q=($('clientSearch')?.value||'').toLowerCase();
+
  const list=clients.filter(c=>
-  [c.nome,c.cpf,c.telefone,c.situacao].join(' ').toLowerCase().includes(q)
+  [c.nome,c.cpf,c.telefone,c.situacao]
+   .join(' ').toLowerCase().includes(q)
  );
+
  $('clientRows').innerHTML=list.map(c=>`
- <tr>
- <td>${escapeHtml(c.nome||'Sem nome')}</td>
- <td>${escapeHtml(c.cpf||'—')}</td>
- <td>${escapeHtml(c.produto||'—')}</td>
- <td><span class="status ${c.grupo==='pago'?'green':c.grupo==='perdido'?'red':'yellow'}">${escapeHtml(c.situacao||'—')}</span></td>
- <td>${money(c.oferta?.valor)}</td>
- <td><button class="btn" onclick="openClient(${Number(c.id)})">Abrir</button></td>
- </tr>`).join('');
+  <tr>
+   <td>${escapeHtml(c.nome||'Sem nome')}</td>
+   <td>${escapeHtml(c.cpf||'—')}</td>
+   <td>${escapeHtml(c.produto||'—')}</td>
+   <td>
+    <span class="status ${
+     c.grupo==='pago'?'green':
+     c.grupo==='perdido'?'red':'yellow'
+    }">${escapeHtml(c.situacao||'—')}</span>
+   </td>
+   <td>${money(c.oferta?.valor)}</td>
+   <td>
+    <button class="btn" onclick="openClient(${Number(c.id)})">
+     Abrir
+    </button>
+   </td>
+  </tr>
+ `).join('');
 }
 
+/* FICHA DO CLIENTE */
 async function openClient(id){
  page('clientDetail');
+
  try{
-  const f=await request('/escritorio/cliente','GET',{k:token,id});
+  const f=await request('/escritorio/cliente','GET',{
+   k:token,
+   id
+  });
+
   const l=f.lead||{};
+
   $('clientInfo').innerHTML=`
-  <h2>${escapeHtml(l.nome||'Cliente')}</h2>
-  <p>Telefone: ${escapeHtml(l.telefone||'—')}</p>
-  <p>CPF: ${escapeHtml(l.cpf||'—')}</p>
-  <p>Produto: ${escapeHtml(l.produto||'—')}</p>
-  <p>Valor: ${money(l.valor)}</p>
-  <h3>Histórico de conversa</h3>
-  ${(f.conversa||[]).map(m=>`<p>${escapeHtml(m.direcao)}: ${escapeHtml(m.conteudo)}</p>`).join('')}
-  <h3>Contratos</h3>
-  ${(f.contratos||[]).map(c=>`<p>${escapeHtml(c.etapa||'')} · ${money(c.valor_liberado)}</p>`).join('')}`;
- }catch(e){$('clientInfo').textContent=e.message;}
+   <h2>${escapeHtml(l.nome||'Cliente')}</h2>
+   <p>Telefone: ${escapeHtml(l.telefone||'—')}</p>
+   <p>CPF: ${escapeHtml(l.cpf||'—')}</p>
+   <p>Produto: ${escapeHtml(l.produto||'—')}</p>
+   <p>Valor: ${money(l.valor)}</p>
+
+   <h3>Histórico de conversa</h3>
+   ${(f.conversa||[]).map(m=>`
+    <p>${escapeHtml(m.direcao)}: ${escapeHtml(m.conteudo)}</p>
+   `).join('')}
+
+   <h3>Contratos</h3>
+   ${(f.contratos||[]).map(c=>`
+    <p>${escapeHtml(c.etapa||'')} · ${money(c.valor_liberado)}</p>
+   `).join('')}
+  `;
+
+ }catch(error){
+  $('clientInfo').textContent=error.message;
+ }
 }
 
+/* WHATSAPP */
 async function loadChats(){
  try{
-  const d=await request('/escritorio/atendimento','POST',{k:token,acao:'lista'});
+  const d=await request('/escritorio/atendimento','POST',{
+   k:token,
+   acao:'lista'
+  });
+
   chats=d.conversas||[];
-  $('chatList').innerHTML=chats.map(c=>`
-   <button class="btn" style="width:100%;text-align:left;margin:4px 0"
-   onclick="openChat(${Number(c.id)})">
-   <b>${escapeHtml(c.nome||c.telefone)}</b><br>
-   <small>${escapeHtml(c.ultima||'')}</small>
-   </button>`).join('');
- }catch(e){$('chatList').textContent=e.message;}
+  renderChats();
+
+ }catch(error){
+  $('chatList').textContent=error.message;
+ }
 }
 
 function renderChats(){
  const q=($('chatSearch')?.value||'').toLowerCase();
+
  $('chatList').innerHTML=chats.filter(c=>
-  (c.nome+' '+c.telefone).toLowerCase().includes(q)
- ).map(c=>`<button class="btn" style="width:100%;text-align:left;margin:4px 0"
- onclick="openChat(${Number(c.id)})">${escapeHtml(c.nome||c.telefone)}<br><small>${escapeHtml(c.ultima||'')}</small></button>`).join('');
+  (String(c.nome||'')+' '+String(c.telefone||''))
+   .toLowerCase().includes(q)
+ ).map(c=>`
+  <button class="btn"
+   style="width:100%;text-align:left;margin:4px 0"
+   onclick="openChat(${Number(c.id)})">
+   <b>${escapeHtml(c.nome||c.telefone)}</b><br>
+   <small>${escapeHtml(c.ultima||'')}</small>
+  </button>
+ `).join('');
 }
 
 async function openChat(id){
  selectedChat=id;
+
  try{
-  const d=await request('/escritorio/atendimento','POST',{k:token,acao:'conversa',id});
+  const d=await request('/escritorio/atendimento','POST',{
+   k:token,
+   acao:'conversa',
+   id
+  });
+
   $('chatHeader').textContent=d.lead?.nome||'Conversa';
-  $('chatMessages').innerHTML=(d.msgs||[]).map(m=>
-   `<div class="msg ${m.dir==='entrada'?'in':'out'}">${escapeHtml(m.txt)}</div>`
-  ).join('');
+
+  $('chatMessages').innerHTML=(d.msgs||[]).map(m=>`
+   <div class="msg ${m.dir==='entrada'?'in':'out'}">
+    ${escapeHtml(m.txt)}
+   </div>
+  `).join('');
+
   $('chatMessages').scrollTop=$('chatMessages').scrollHeight;
- }catch(e){alert(e.message);}
+
+ }catch(error){
+  alert(error.message);
+ }
 }
 
 async function sendMessage(){
  const text=$('chatText').value.trim();
+
  if(!selectedChat||!text)return;
+
  try{
   const d=await request('/escritorio/atendimento','POST',{
-   k:token,acao:'enviar',id:selectedChat,texto:text
+   k:token,
+   acao:'enviar',
+   id:selectedChat,
+   texto:text
   });
-  if(!d.ok)throw Error(d.erro||'Falha no envio');
+
+  if(!d.ok)throw new Error(d.erro||'Falha no envio.');
+
   $('chatText').value='';
   await openChat(selectedChat);
- }catch(e){alert(e.message);}
+
+ }catch(error){
+  alert(error.message);
+ }
 }
 
 async function returnAI(){
  if(!selectedChat)return;
+
  try{
   await request('/escritorio/atendimento','POST',{
-   k:token,acao:'devolver',id:selectedChat
+   k:token,
+   acao:'devolver',
+   id:selectedChat
   });
+
   await openChat(selectedChat);
- }catch(e){alert(e.message);}
+
+ }catch(error){
+  alert(error.message);
+ }
 }
 
+/* PROPOSTAS */
 function renderProposals(){
- const list=clients.filter(c=>c.oferta||c.grupo==='pago'||c.etapa>=4);
+ const list=clients.filter(c=>
+  c.oferta||c.grupo==='pago'||Number(c.etapa)>=4
+ );
+
  $('proposalRows').innerHTML=list.map(c=>`
- <tr>
- <td>${escapeHtml(c.nome||'—')}</td>
- <td>${escapeHtml(c.cpf||'—')}</td>
- <td>${escapeHtml(c.produto||'—')}</td>
- <td>${escapeHtml(c.situacao||'—')}</td>
- <td>${money(c.oferta?.valor)}</td>
- <td>${c.ultima?new Date(c.ultima).toLocaleString('pt-BR'):'—'}</td>
- </tr>`).join('');
+  <tr>
+   <td>${escapeHtml(c.nome||'—')}</td>
+   <td>${escapeHtml(c.cpf||'—')}</td>
+   <td>${escapeHtml(c.produto||'—')}</td>
+   <td>${escapeHtml(c.situacao||'—')}</td>
+   <td>${money(c.oferta?.valor)}</td>
+   <td>${c.ultima?new Date(c.ultima).toLocaleString('pt-BR'):'—'}</td>
+  </tr>
+ `).join('');
 }
 
+/* FINANCEIRO */
 async function loadFinance(){
  try{
   finance=await request('/escritorio/financeiro','POST',{
-   k:token,acao:'ver',mes:new Date().toISOString().slice(0,7)
+   k:token,
+   acao:'ver',
+   mes:new Date().toISOString().slice(0,7)
   });
+
   $('finRevenue').textContent=money(finance.receita);
   $('finCosts').textContent=money(finance.total_gastos);
-  $('finProfit').textContent=money(Number(finance.receita||0)-Number(finance.total_gastos||0));
+
+  $('finProfit').textContent=money(
+   Number(finance.receita||0)-Number(finance.total_gastos||0)
+  );
+
   $('finPaid').textContent=finance.contratos_pagos??0;
+
   $('costRows').innerHTML=(finance.gastos||[]).map(g=>`
-  <tr><td>${g.data}</td><td>${escapeHtml(g.categoria)}</td>
-  <td>${escapeHtml(g.descricao||'')}</td><td>${money(g.valor)}</td>
-  <td><button class="btn" onclick="deleteCost(${Number(g.id)})">Apagar</button></td></tr>`).join('');
- }catch(e){console.error(e);alert('Financeiro: '+e.message);}
+   <tr>
+    <td>${escapeHtml(g.data||'')}</td>
+    <td>${escapeHtml(g.categoria||'')}</td>
+    <td>${escapeHtml(g.descricao||'')}</td>
+    <td>${money(g.valor)}</td>
+    <td>
+     <button class="btn" onclick="deleteCost(${Number(g.id)})">
+      Apagar
+     </button>
+    </td>
+   </tr>
+  `).join('');
+
+ }catch(error){
+  console.error('Erro no financeiro:',error);
+  alert('Financeiro: '+error.message);
+ }
 }
 
 async function saveCost(){
  const raw=$('costValue').value.replace(/\./g,'').replace(',','.');
  const value=Number(raw);
- if(!(value>0))return alert('Informe um valor válido.');
+
+ if(!(value>0)){
+  alert('Informe um valor válido.');
+  return;
+ }
+
  try{
   const d=await request('/escritorio/financeiro','POST',{
-   k:token,acao:'salvar',mes:new Date().toISOString().slice(0,7),
-   valor:value.toFixed(2),data:$('costDate').value,
+   k:token,
+   acao:'salvar',
+   mes:new Date().toISOString().slice(0,7),
+   valor:value.toFixed(2),
+   data:$('costDate').value,
    categoria:$('costCategory').value,
    descricao:$('costDescription').value
   });
-  if(d.erro)throw Error(d.erro);
-  $('costValue').value='';$('costDescription').value='';
-  loadFinance();
- }catch(e){alert(e.message);}
+
+  if(d.erro)throw new Error(d.erro);
+
+  $('costValue').value='';
+  $('costDescription').value='';
+  await loadFinance();
+
+ }catch(error){
+  alert(error.message);
+ }
 }
 
 async function deleteCost(id){
  if(!confirm('Apagar esta despesa?'))return;
+
  try{
   await request('/escritorio/financeiro','POST',{
-   k:token,acao:'apagar',mes:new Date().toISOString().slice(0,7),id
+   k:token,
+   acao:'apagar',
+   mes:new Date().toISOString().slice(0,7),
+   id
   });
-  loadFinance();
- }catch(e){alert(e.message);}
+
+  await loadFinance();
+
+ }catch(error){
+  alert(error.message);
+ }
 }
 
+/* CONFIGURAÇÕES */
 function saveConfig(){
- BASE=$('configServer').value.trim().replace(/\/$/,'');
+ BASE=normalizeBase($('configServer').value);
+
  localStorage.setItem('gm_api',BASE);
- alert('URL salva. Atualize o painel para testar.');
+ $('configServer').value=BASE;
+
+ alert('URL salva. Faça um novo teste de conexão.');
 }
 
-function escapeHtml(v){
- return String(v??'').replace(/[&<>"']/g,c=>({
- '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
- }[c]));
-}
-
+/* INICIALIZAÇÃO */
 $('server').value=BASE;
+
 if(token){
  $('login').classList.add('hidden');
  $('app').classList.remove('hidden');
@@ -530,5 +887,6 @@ if(token){
  refresh();
 }
 </script>
+
 </body>
 </html>
