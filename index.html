@@ -4,889 +4,1154 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GM CRED | Gestão Inteligente</title>
-
+<title>GM CRED | Central de Gestão</title>
 <style>
 :root{
- --gold:#c9a13b;
- --gold2:#e6c46b;
- --bg:#101114;
- --panel:#191a1f;
- --panel2:#202127;
- --line:#303139;
- --white:#f5f5f5;
- --muted:#96969f;
- --green:#28b77a;
- --red:#e35b5b;
+ --gold:#cba23d;--gold2:#e9c66c;--bg:#101114;--side:#17181d;
+ --panel:#1d1e24;--panel2:#24252c;--line:#33343d;
+ --text:#f5f5f6;--muted:#9698a3;--green:#32bd83;
+ --red:#ed626b;--blue:#619af2;--yellow:#e7bd59;
 }
 *{box-sizing:border-box}
-body{
- margin:0;background:var(--bg);color:var(--white);
- font-family:Inter,Arial,sans-serif
-}
+body{margin:0;background:var(--bg);color:var(--text);
+ font:14px Inter,Arial,sans-serif}
 button,input,select,textarea{font:inherit}
 button{cursor:pointer}
 .hidden{display:none!important}
-
-.login{
- max-width:420px;margin:7vh auto;background:var(--panel);
- border:1px solid var(--line);padding:30px;border-radius:17px
-}
-.logo{
- font-size:26px;font-weight:900;color:var(--gold);
- letter-spacing:1px
-}
-.logo small{
- display:block;font-size:10px;letter-spacing:3px;color:#aaa;
- margin-top:4px
-}
-.login h2{margin-top:28px}
-.login p{color:var(--muted)}
-.login input{
- display:block;width:100%;margin:12px 0;
- background:#111216;color:white;border:1px solid var(--line);
- padding:13px;border-radius:9px
-}
-.login button{width:100%;margin-top:4px}
-.error{color:#ff8585;font-size:13px;margin-top:10px}
-
-.btn{
- border:1px solid var(--line);background:#292a30;color:white;
- padding:10px 15px;border-radius:8px
-}
-.btn.goldbtn{
- background:var(--gold);color:#151515;
- border-color:var(--gold);font-weight:800
-}
-.btn:disabled{opacity:.4;cursor:not-allowed}
-
-.app{display:flex;min-height:100vh}
-.sidebar{
- width:240px;background:#15161a;
- border-right:1px solid var(--line);
- padding:24px 15px;flex-shrink:0
-}
-.menu{margin-top:35px}
-.menu button{
- display:block;width:100%;text-align:left;
- padding:13px 14px;margin:5px 0;
- border:0;border-radius:9px;background:transparent;
- color:#aaa;font-size:14px
-}
-.menu button.active,.menu button:hover{
- background:#30291b;color:var(--gold2)
-}
-.menu button span{margin-right:9px}
-.main{flex:1;min-width:0}
-.top{
- height:75px;border-bottom:1px solid var(--line);
- display:flex;align-items:center;justify-content:space-between;
- padding:0 28px
-}
-.top h2{font-size:18px;margin:0}
-.content{padding:28px;max-width:1500px;margin:auto}
-.grid{
- display:grid;grid-template-columns:repeat(4,1fr);gap:15px
-}
-.card{
- background:var(--panel);border:1px solid var(--line);
- border-radius:13px;padding:19px
-}
-.card small{color:var(--muted)}
-.value{font-size:26px;font-weight:800;margin-top:12px}
-.gold{color:var(--gold2)}
-.section{margin-top:25px}
-.section h3{font-size:16px;margin-bottom:15px}
-.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px}
-.toolbar input{flex:1;min-width:180px}
-input,select,textarea{
- background:#111216;color:white;border:1px solid var(--line);
- border-radius:8px;padding:11px;outline:none
-}
-input:focus,select:focus,textarea:focus{border-color:var(--gold)}
-.tablewrap{
- overflow:auto;background:var(--panel);
- border:1px solid var(--line);border-radius:12px
-}
-table{width:100%;border-collapse:collapse;min-width:650px}
-th,td{
- text-align:left;padding:13px 15px;
- border-bottom:1px solid var(--line);font-size:13px
-}
-th{color:var(--muted);font-weight:600}
-tr:hover td{background:#222329}
-.status{
- padding:5px 9px;border-radius:20px;font-size:11px;
- background:#292a30;color:#ccc
-}
-.status.green{background:#143c2e;color:#5ee0a6}
-.status.red{background:#421f24;color:#ff8d8d}
-.status.yellow{background:#40371f;color:#f0ce75}
+button:disabled{opacity:.45;cursor:not-allowed}
+.layout{display:flex;min-height:100vh}
+.sidebar{width:255px;background:var(--side);border-right:1px solid var(--line);
+ padding:20px 13px;position:fixed;inset:0 auto 0 0;overflow:auto;z-index:10}
+.brand{padding:8px 13px 23px;font-size:25px;font-weight:900;color:var(--gold)}
+.brand small{display:block;color:#aaa;font-size:9px;letter-spacing:3px;margin-top:4px}
+.group{margin:17px 0 6px;padding:0 13px;color:#747680;
+ font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase}
+.nav{display:flex;align-items:center;gap:11px;width:100%;padding:11px 13px;
+ margin:3px 0;border:0;border-radius:8px;background:none;color:#aaa;text-align:left}
+.nav:hover,.nav.active{background:#332c1c;color:var(--gold2)}
+.nav .ico{width:19px;text-align:center;font-size:16px}
+.main{margin-left:255px;width:calc(100% - 255px);min-width:0}
+.top{height:72px;display:flex;align-items:center;justify-content:space-between;
+ padding:0 27px;border-bottom:1px solid var(--line);background:#15161a;
+ position:sticky;top:0;z-index:5}
+.top h1{font-size:18px;margin:0}
+.topright{display:flex;gap:9px;align-items:center}
+.content{padding:25px;max-width:1600px;margin:auto}
+.page{display:none}.page.active{display:block}
+.pagehead{display:flex;justify-content:space-between;align-items:center;
+ gap:15px;margin-bottom:20px;flex-wrap:wrap}
+.pagehead h2{font-size:20px;margin:0 0 5px}
+.pagehead p{color:var(--muted);margin:0;font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.card{background:var(--panel);border:1px solid var(--line);
+ border-radius:12px;padding:17px;min-width:0}
+.card h3{font-size:14px;margin:0 0 14px}
+.kpi small{color:var(--muted);font-size:12px}
+.kpi strong{display:block;font-size:26px;margin-top:10px}
+.gold{color:var(--gold2)}.green{color:var(--green)}.red{color:var(--red)}
 .muted{color:var(--muted)}
-.notice{
- padding:13px;background:#30291b;color:var(--gold2);
- border-radius:9px;font-size:13px;margin-bottom:15px
+.section{margin-top:19px}
+.row{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.spread{justify-content:space-between}
+.btn{padding:9px 13px;border:1px solid var(--line);border-radius:8px;
+ background:#292a31;color:var(--text)}
+.btn:hover{border-color:var(--gold)}
+.btn.primary{background:var(--gold);border-color:var(--gold);color:#171717;font-weight:800}
+.btn.danger{color:#ff9299}
+.btn.small{padding:6px 9px;font-size:12px}
+input,select,textarea{background:#111216;color:var(--text);
+ border:1px solid var(--line);border-radius:8px;padding:10px;min-width:0}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
+.field{display:flex;flex-direction:column;gap:6px;color:var(--muted);font-size:12px}
+.field input,.field select,.field textarea{width:100%}
+.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:13px}
+.toolbar input{flex:1;min-width:180px}
+.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+table{width:100%;border-collapse:collapse;min-width:700px}
+th,td{padding:12px;text-align:left;border-bottom:1px solid var(--line);font-size:12px}
+th{color:var(--muted);font-weight:700;background:#202127}
+tr:hover td{background:#25262d}
+.tag{display:inline-block;padding:4px 8px;border-radius:30px;
+ background:#30313a;color:#ccc;font-size:11px}
+.tag.ok{background:#143c2e;color:#69e4ad}
+.tag.bad{background:#452027;color:#ff969d}
+.tag.warn{background:#44391f;color:#f2d17d}
+.bar{height:8px;background:#34353d;border-radius:20px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--gold);border-radius:20px}
+.notice{padding:13px;border:1px solid #66552b;background:#30291b;
+ color:#e9ce83;border-radius:9px;font-size:12px;line-height:1.6}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.list{display:flex;flex-direction:column;gap:8px}
+.listitem{padding:12px;border:1px solid var(--line);border-radius:9px;
+ display:flex;justify-content:space-between;gap:10px;align-items:center}
+.empty{padding:25px;text-align:center;color:var(--muted)}
+pre{white-space:pre-wrap;overflow:auto;background:#111216;
+ border:1px solid var(--line);border-radius:8px;padding:12px;color:#ddd}
+.modal{position:fixed;inset:0;background:#000b;z-index:30;
+ display:flex;align-items:center;justify-content:center;padding:15px}
+.modalbox{width:min(850px,100%);max-height:90vh;overflow:auto;
+ background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px}
+.modalhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.modalhead h3{margin:0}
+.chatbox{height:400px;overflow:auto;background:#111216;
+ border:1px solid var(--line);border-radius:9px;padding:12px}
+.bubble{max-width:82%;padding:10px;border-radius:10px;
+ background:#292a32;margin:8px 0;white-space:pre-wrap}
+.bubble.out{margin-left:auto;background:#214534}
+.bubble small{display:block;color:#aaa;margin-top:5px;font-size:10px}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.formgrid .full{grid-column:1/-1}
+.login{max-width:420px;margin:10vh auto;padding:30px;background:var(--panel);
+ border:1px solid var(--line);border-radius:16px}
+.login input{width:100%;margin:8px 0}
+.login .brand{padding:0}
+.error{color:#ff8585;font-size:12px;margin-top:10px}
+.mobilemenu{display:none}
+@media(max-width:1000px){
+ .sidebar{width:210px}.main{margin-left:210px;width:calc(100% - 210px)}
+ .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
-.form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.form label{
- display:flex;flex-direction:column;gap:7px;
- font-size:12px;color:var(--muted)
-}
-.form .full{grid-column:1/-1}
-.chat{
- height:420px;overflow:auto;background:#111216;
- border:1px solid var(--line);border-radius:10px;padding:15px
-}
-.msg{
- max-width:80%;padding:10px 13px;border-radius:10px;
- margin:8px 0;font-size:13px;white-space:pre-wrap
-}
-.msg.in{background:#282930}
-.msg.out{background:#254333;margin-left:auto}
-.chatbar{display:flex;gap:8px;margin-top:10px}
-.chatbar input{flex:1}
-@media(max-width:850px){
- .sidebar{width:65px;padding:15px 5px}
- .logo{font-size:17px;padding:5px}
- .logo small{display:none}
- .menu button{font-size:0;text-align:center;padding:14px 3px}
- .menu button span{font-size:17px;margin:0}
- .content{padding:15px}
- .grid{grid-template-columns:1fr 1fr}
- .top{padding:0 15px}
-}
-@media(max-width:520px){
- .form{grid-template-columns:1fr}
- .form .full{grid-column:auto}
+@media(max-width:700px){
+ .sidebar{width:65px;padding:12px 5px}
+ .brand{font-size:17px;padding:8px 5px}
+ .brand small,.group,.nav .label{display:none}
+ .nav{justify-content:center;padding:13px 3px}
+ .nav .ico{font-size:18px}
+ .main{margin-left:65px;width:calc(100% - 65px)}
+ .content{padding:13px}
+ .top{padding:0 13px}
+ .top h1{font-size:15px}
+ .split,.grid3{grid-template-columns:1fr}
+ .formgrid{grid-template-columns:1fr}
+ .formgrid .full{grid-column:auto}
 }
 </style>
 </head>
-
 <body>
 
 <div id="login" class="login">
- <div class="logo">GM CRED<small>GESTÃO INTELIGENTE</small></div>
-
+ <div class="brand">GM CRED<small>GESTÃO INTELIGENTE</small></div>
  <h2>Entrar no painel</h2>
- <p>Conecte ao servidor da operação.</p>
-
- <input id="server"
-  placeholder="URL do servidor"
-  value="https://rarelookingorca-n8n.cloudfy.live/webhook">
-
- <input id="masterKey" type="password"
-  placeholder="Chave de acesso">
-
- <button class="btn goldbtn" onclick="login()">ENTRAR</button>
+ <p class="muted">Acesso ao escritório GM CRED.</p>
+ <label class="field">Servidor
+  <input id="server" value="https://rarelookingorca-n8n.cloudfy.live/webhook">
+ </label>
+ <label class="field" style="margin-top:10px">Chave de acesso
+  <input id="key" type="password" placeholder="Chave do escritório">
+ </label>
+ <button class="btn primary" style="width:100%;margin-top:13px" onclick="login()">ENTRAR</button>
  <div id="loginError" class="error"></div>
 </div>
 
-<div id="app" class="app hidden">
+<div id="app" class="layout hidden">
+<aside class="sidebar">
+ <div class="brand">GM CRED<small>GESTÃO INTELIGENTE</small></div>
 
- <aside class="sidebar">
-  <div class="logo">GM<small>CRED</small></div>
+ <div class="group">Operação</div>
+ <button class="nav active" data-page="hoje"><span class="ico">⌂</span><span class="label">Início</span></button>
+ <button class="nav" data-page="escritorio"><span class="ico">▦</span><span class="label">Escritório</span></button>
+ <button class="nav" data-page="conversas"><span class="ico">◉</span><span class="label">Conversas</span></button>
+ <button class="nav" data-page="clientes"><span class="ico">♙</span><span class="label">Clientes / CRM</span></button>
 
-  <nav class="menu">
-   <button class="active" onclick="page('dashboard',this)">
-    <span>◫</span> Visão geral
-   </button>
-   <button onclick="page('clientes',this)">
-    <span>♙</span> Clientes
-   </button>
-   <button onclick="page('conversas',this)">
-    <span>◉</span> WhatsApp
-   </button>
-   <button onclick="page('propostas',this)">
-    <span>▤</span> Propostas
-   </button>
-   <button onclick="page('financeiro',this)">
-    <span>＄</span> Financeiro
-   </button>
-   <button onclick="page('consultas',this)">
-    <span>⌕</span> Consultas
-   </button>
-   <button onclick="page('config',this)">
-    <span>⚙</span> Configurações
-   </button>
-  </nav>
- </aside>
+ <div class="group">Crédito</div>
+ <button class="nav" data-page="consultas"><span class="ico">⌕</span><span class="label">Consulta V8 / Unno</span></button>
+ <button class="nav" data-page="hub"><span class="ico">◎</span><span class="label">HUB CLT / FGTS</span></button>
+ <button class="nav" data-page="propostas"><span class="ico">▤</span><span class="label">Contratos / propostas</span></button>
 
- <main class="main">
-  <header class="top">
-   <h2 id="pageTitle">Visão geral</h2>
-   <div>
-    <span id="connection" class="status">Aguardando</span>
-    <button class="btn" onclick="refresh()">↻ Atualizar</button>
-   </div>
-  </header>
+ <div class="group">Marketing</div>
+ <button class="nav" data-page="campanha"><span class="ico">⚑</span><span class="label">Campanha</span></button>
+ <button class="nav" data-page="disparo"><span class="ico">➤</span><span class="label">Disparos</span></button>
+ <button class="nav" data-page="oficial"><span class="ico">✓</span><span class="label">API oficial</span></button>
 
-  <div class="content">
+ <div class="group">Gestão</div>
+ <button class="nav" data-page="vendas"><span class="ico">↗</span><span class="label">Vendas</span></button>
+ <button class="nav" data-page="funil"><span class="ico">▽</span><span class="label">Funil</span></button>
+ <button class="nav" data-page="agentes"><span class="ico">♧</span><span class="label">Agentes</span></button>
+ <button class="nav" data-page="numeros"><span class="ico">▣</span><span class="label">Números WhatsApp</span></button>
+ <button class="nav" data-page="maturador"><span class="ico">⟳</span><span class="label">Maturador</span></button>
+ <button class="nav" data-page="indicacoes"><span class="ico">🎁</span><span class="label">Indicações</span></button>
+ <button class="nav" data-page="financeiro"><span class="ico">＄</span><span class="label">Financeiro</span></button>
+ <button class="nav" data-page="simulacao"><span class="ico">▤</span><span class="label">Simulação / projeções</span></button>
+ <button class="nav" data-page="teste"><span class="ico">🧪</span><span class="label">Chat teste</span></button>
+ <button class="nav" data-page="config"><span class="ico">⚙</span><span class="label">Configurações</span></button>
+</aside>
 
-   <section id="dashboard">
-    <div class="grid">
-     <div class="card">
-      <small>Clientes em andamento</small>
-      <div class="value gold" id="kActive">—</div>
-     </div>
-     <div class="card">
-      <small>Contratos pagos</small>
-      <div class="value" id="kPaid">—</div>
-     </div>
-     <div class="card">
-      <small>Valor liberado</small>
-      <div class="value" id="kReleased">—</div>
-     </div>
-     <div class="card">
-      <small>Comissão</small>
-      <div class="value gold" id="kCommission">—</div>
-     </div>
-    </div>
-
-    <div class="section card">
-     <h3>Resumo da operação</h3>
-     <div id="summary" class="muted">Aguardando dados...</div>
-    </div>
-   </section>
-
-   <section id="clientes" class="hidden">
-    <div class="toolbar">
-     <input id="clientSearch"
-      placeholder="Buscar nome, CPF ou telefone"
-      oninput="renderClients()">
-     <button class="btn" onclick="loadClients()">Atualizar</button>
-    </div>
-    <div class="tablewrap">
-     <table>
-      <thead>
-       <tr>
-        <th>Cliente</th><th>CPF</th><th>Produto</th>
-        <th>Situação</th><th>Valor</th><th></th>
-       </tr>
-      </thead>
-      <tbody id="clientRows"></tbody>
-     </table>
-    </div>
-   </section>
-
-   <section id="conversas" class="hidden">
-    <div class="toolbar">
-     <input id="chatSearch" placeholder="Buscar conversa"
-      oninput="renderChats()">
-     <button class="btn" onclick="loadChats()">Atualizar</button>
-    </div>
-
-    <div class="grid" style="grid-template-columns:minmax(220px,1fr) 2fr">
-     <div class="card" id="chatList">Carregando...</div>
-
-     <div class="card">
-      <div id="chatHeader">Selecione uma conversa</div>
-      <div class="chat" id="chatMessages"></div>
-
-      <div class="chatbar">
-       <input id="chatText" placeholder="Digite sua mensagem">
-       <button class="btn goldbtn" onclick="sendMessage()">Enviar</button>
-      </div>
-
-      <div style="margin-top:10px">
-       <button class="btn" onclick="returnAI()">Devolver para IA</button>
-      </div>
-     </div>
-    </div>
-   </section>
-
-   <section id="propostas" class="hidden">
-    <div class="notice">
-     Acompanhamento das propostas conforme os dados disponibilizados pelo painel.
-    </div>
-    <div class="tablewrap">
-     <table>
-      <thead>
-       <tr>
-        <th>Cliente</th><th>CPF</th><th>Produto</th>
-        <th>Situação</th><th>Valor</th><th>Atualização</th>
-       </tr>
-      </thead>
-      <tbody id="proposalRows"></tbody>
-     </table>
-    </div>
-   </section>
-
-   <section id="financeiro" class="hidden">
-    <div class="grid">
-     <div class="card"><small>Receita</small><div class="value gold" id="finRevenue">—</div></div>
-     <div class="card"><small>Gastos</small><div class="value" id="finCosts">—</div></div>
-     <div class="card"><small>Lucro</small><div class="value" id="finProfit">—</div></div>
-     <div class="card"><small>Contratos pagos</small><div class="value" id="finPaid">—</div></div>
-    </div>
-
-    <div class="section card">
-     <h3>Lançar despesa</h3>
-     <div class="form">
-      <label>Valor<input id="costValue" placeholder="150,00"></label>
-      <label>Data<input id="costDate" type="date"></label>
-      <label>Categoria
-       <select id="costCategory">
-        <option value="disparos">Disparos</option>
-        <option value="trafego">Tráfego pago</option>
-        <option value="bms">BMs</option>
-        <option value="outros">Outros</option>
-       </select>
-      </label>
-      <label>Descrição<input id="costDescription"></label>
-     </div>
-     <button class="btn goldbtn" style="margin-top:15px"
-      onclick="saveCost()">Salvar despesa</button>
-    </div>
-
-    <div class="section tablewrap">
-     <table>
-      <thead>
-       <tr><th>Data</th><th>Categoria</th><th>Descrição</th><th>Valor</th><th></th></tr>
-      </thead>
-      <tbody id="costRows"></tbody>
-     </table>
-    </div>
-   </section>
-
-   <section id="consultas" class="hidden">
-    <div class="notice">
-     As consultas CLT e FGTS utilizam a HUB na operação.
-     O fluxo interno foi encontrado no projeto, mas ainda não foi
-     identificada uma rota pública para consulta manual pelo painel.
-    </div>
-
-    <div class="grid">
-     <div class="card">
-      <h3>Crédito CLT · HUB</h3>
-      <p class="muted">Aguardando rota autenticada de consulta manual.</p>
-      <span class="status yellow">Não exposta no backend</span>
-     </div>
-     <div class="card">
-      <h3>FGTS · HUB</h3>
-      <p class="muted">Fluxo interno GM Cred · HUB FGTS identificado.</p>
-      <span class="status yellow">Não exposta no backend</span>
-     </div>
-    </div>
-   </section>
-
-   <section id="config" class="hidden">
-    <div class="card">
-     <h3>Configuração do servidor</h3>
-     <label class="muted">URL base do webhook</label>
-     <input id="configServer" style="width:100%">
-     <button class="btn goldbtn" style="margin-top:12px"
-      onclick="saveConfig()">Salvar URL</button>
-     <p class="muted">
-      A chave mestra não fica salva no navegador.
-      O painel utiliza um token temporário de sessão.
-     </p>
-     <button class="btn" onclick="logout()">Sair</button>
-    </div>
-   </section>
-
-   <section id="clientDetail" class="hidden">
-    <button class="btn" onclick="page('clientes')">← Voltar</button>
-    <div class="section card" id="clientInfo">Carregando ficha...</div>
-   </section>
-
+<main class="main">
+ <header class="top">
+  <h1 id="title">Início</h1>
+  <div class="topright">
+   <span id="status" class="tag warn">Conectando</span>
+   <button class="btn small" onclick="refresh()">↻ Atualizar</button>
+   <button class="btn small" onclick="logout()">Sair</button>
   </div>
- </main>
+ </header>
+
+ <div class="content">
+
+ <!-- INÍCIO -->
+ <section class="page active" id="p-hoje">
+  <div class="pagehead"><div><h2>Visão geral da operação</h2><p>Produção, metas, atendimento e gargalos.</p></div>
+   <div class="row"><button class="btn small" onclick="periodo='hoje';renderToday()">Hoje</button><button class="btn small" onclick="periodo='d7';renderToday()">7 dias</button><button class="btn small" onclick="periodo='d30';renderToday()">30 dias</button></div>
+  </div>
+  <div class="grid">
+   <div class="card kpi"><small>Clientes em andamento</small><strong id="kAtivos">—</strong></div>
+   <div class="card kpi"><small>Contratos pagos</small><strong id="kPagos" class="green">—</strong></div>
+   <div class="card kpi"><small>Valor liberado</small><strong id="kLiberado" class="gold">—</strong></div>
+   <div class="card kpi"><small>Comissão</small><strong id="kComissao" class="gold">—</strong></div>
+  </div>
+  <div class="section grid3">
+   <div class="card"><h3>Meta do dia</h3><strong id="metaValor" class="gold">—</strong><div class="bar" style="margin:12px 0"><i id="metaBar" style="width:0%"></i></div><small id="metaInfo" class="muted">—</small></div>
+   <div class="card"><h3>Saúde dos serviços</h3><div id="health" class="list"></div></div>
+   <div class="card"><h3>Atenção necessária</h3><div id="attention" class="muted">Carregando alertas...</div></div>
+  </div>
+  <div class="section card"><h3>Resumo por departamento</h3><div id="departments" class="list"></div></div>
+  <div class="section card"><h3>Atividade recente · Feed</h3><div id="feed" class="list"></div></div>
+ </section>
+
+ <!-- ESCRITÓRIO -->
+ <section class="page" id="p-escritorio">
+  <div class="pagehead"><div><h2>Escritório virtual</h2><p>Departamentos, agentes, filas e clientes parados.</p></div><button class="btn" onclick="refresh()">Atualizar escritório</button></div>
+  <div class="grid3" id="officeStats"></div>
+  <div class="section card"><h3>Departamentos e filas</h3><div id="sectors" class="list"></div></div>
+  <div class="section card"><h3>Clientes parados / fora do prazo</h3><div id="stalled" class="list"></div></div>
+ </section>
+
+ <!-- CONVERSAS -->
+ <section class="page" id="p-conversas">
+  <div class="pagehead"><div><h2>Conversas WhatsApp</h2><p>Atendimento humano, histórico e controle da IA.</p></div><button class="btn" onclick="loadChats()">Atualizar conversas</button></div>
+  <div class="split">
+   <div class="card"><input id="chatSearch" placeholder="Buscar nome ou telefone" oninput="renderChatList()" style="width:100%;margin-bottom:10px"><div id="chatList" class="list"></div></div>
+   <div class="card"><div id="chatHead" class="muted">Selecione uma conversa.</div><div id="chatMessages" class="chatbox" style="margin:12px 0"></div>
+    <textarea id="chatText" rows="3" placeholder="Escreva sua resposta..." style="width:100%"></textarea>
+    <div class="row" style="margin-top:9px"><button class="btn primary" onclick="sendChat()">Enviar</button><button class="btn" onclick="returnAgent()">Devolver para IA</button><select id="chatReason"><option value="atendimento concluído">Atendimento concluído</option><option value="sem interesse">Sem interesse</option><option value="já tem empréstimo">Já tem empréstimo</option><option value="número errado: não é o cliente">Número errado</option><option value="não contatar: pediu para não chamar">Não contatar</option><option value="sem margem: informado pelo atendente">Sem margem</option></select><button class="btn danger" onclick="finishChat()">Finalizar</button></div>
+   </div>
+  </div>
+ </section>
+
+ <!-- CLIENTES -->
+ <section class="page" id="p-clientes">
+  <div class="pagehead"><div><h2>CRM de clientes</h2><p>Todos os clientes que entraram no escritório.</p></div><button class="btn primary" onclick="exportCRM()">⬇ Exportar planilha</button></div>
+  <div class="toolbar"><input id="crmSearch" placeholder="Nome, CPF ou telefone" oninput="renderCRM()"><select id="crmGroup" onchange="renderCRM()"><option value="todos">Todos</option><option value="andamento">Em andamento</option><option value="com_margem">Com margem</option><option value="sem_margem">Sem margem</option><option value="perdido">Perdidos</option><option value="pago">Pagos</option></select></div>
+  <div id="crmCounts" class="row" style="margin-bottom:12px"></div>
+  <div class="tablewrap"><table><thead><tr><th>Cliente</th><th>Telefone</th><th>CPF</th><th>Produto</th><th>Situação</th><th>Oferta / margem</th><th>Última conversa</th><th></th></tr></thead><tbody id="crmRows"></tbody></table></div>
+ </section>
+
+ <!-- CONSULTA V8 / UNNO -->
+ <section class="page" id="p-consultas">
+  <div class="pagehead"><div><h2>Consulta V8 / Unno</h2><p>Consultar CPF, verificar margem, ofertas e simulações.</p></div></div>
+  <div class="card">
+   <form onsubmit="consultCredit(event)">
+    <div class="formgrid">
+     <label class="field">CPF<input id="v8Cpf" maxlength="14" placeholder="000.000.000-00" required></label>
+     <label class="field">Nome completo<input id="v8Nome" placeholder="Nome do cliente"></label>
+     <label class="field">Nascimento<input id="v8Birth" placeholder="DD/MM/AAAA"></label>
+     <label class="field">Celular<input id="unnoPhone" placeholder="DDD + número"></label>
+     <label class="field">E-mail<input id="unnoEmail" placeholder="E-mail"></label>
+    </div>
+    <div class="row" style="margin-top:14px"><button class="btn primary" id="v8Button">Consultar V8 + Unno</button><span id="v8Status" class="muted"></span></div>
+   </form>
+  </div>
+  <div class="section grid3">
+   <div class="card"><h3>Resultado V8</h3><div id="v8Result" class="muted">Aguardando consulta.</div></div>
+   <div class="card"><h3>Resultado Unno</h3><div id="unnoResult" class="muted">Aguardando consulta.</div></div>
+   <div class="card"><h3>Melhor oferta</h3><div id="bestOffer" class="muted">As ofertas aparecerão após a simulação.</div></div>
+  </div>
+  <div class="section card" id="v8Simulation" hidden>
+   <h3>Simular V8</h3>
+   <div class="formgrid">
+    <label class="field">Valor da parcela<input id="v8Installment" type="number" step=".01"></label>
+    <label class="field">Prazo<select id="v8Term"><option value="todos">Todos os prazos</option><option>6</option><option>8</option><option>10</option><option>12</option><option>18</option><option>24</option><option>36</option><option>38</option><option>46</option></select></label>
+   </div>
+   <button class="btn primary" onclick="simulateV8()" style="margin-top:12px">Simular</button>
+   <div id="simulationResults" style="margin-top:14px"></div>
+  </div>
+ </section>
+
+ <!-- HUB -->
+ <section class="page" id="p-hub">
+  <div class="pagehead"><div><h2>Consultas HUB</h2><p>Crédito CLT e FGTS.</p></div></div>
+  <div class="notice">Os fluxos HUB CLT e HUB FGTS existem na infraestrutura n8n. No branch consultado, não foi identificada uma rota pública de consulta manual equivalente a /escritorio/v8 ou /escritorio/unno. Por segurança, esta tela não envia CPF para uma rota inventada.</div>
+  <div class="section grid3">
+   <div class="card"><h3>Crédito CLT · HUB</h3><p class="muted">Consulta pela HUB utilizada na operação.</p><span class="tag warn">Rota manual pendente</span></div>
+   <div class="card"><h3>FGTS · HUB</h3><p class="muted">Fluxo interno GM Cred · HUB FGTS.</p><span class="tag warn">Rota manual pendente</span></div>
+   <div class="card"><h3>FGTS · Lotus</h3><p class="muted">Painel de fila Lotus separado.</p><button class="btn" onclick="window.open('fgts.html','_blank')">Abrir painel Lotus</button></div>
+  </div>
+ </section>
+
+ <!-- PROPOSTAS -->
+ <section class="page" id="p-propostas">
+  <div class="pagehead"><div><h2>Contratos e propostas</h2><p>Etapas, valores liberados, assinatura e pagamento.</p></div><button class="btn" onclick="refresh()">Atualizar</button></div>
+  <div class="grid" id="proposalKpis"></div>
+  <div class="section toolbar"><input id="proposalSearch" placeholder="Buscar cliente ou CPF" oninput="renderProposals()"><select id="proposalStage" onchange="renderProposals()"><option value="">Todas as etapas</option><option value="proposta">Proposta</option><option value="assinado">Assinado</option><option value="pago">Pago</option></select></div>
+  <div class="tablewrap"><table><thead><tr><th>Cliente</th><th>CPF</th><th>Produto</th><th>Etapa</th><th>Valor liberado</th><th>Comissão</th><th>Data</th></tr></thead><tbody id="proposalRows"></tbody></table></div>
+ </section>
+
+ <!-- CAMPANHA -->
+ <section class="page" id="p-campanha">
+  <div class="pagehead"><div><h2>Campanha</h2><p>Mensagem por número, imagem, rodapé e botões de resposta.</p></div><button class="btn" onclick="campaignLoad()">Atualizar</button></div>
+  <div class="grid3" id="campaignKpis"></div>
+  <div class="section card"><h3>Números da campanha</h3><div id="campaignNumbers" class="list"></div></div>
+  <div class="section card"><h3>Importar clientes</h3>
+   <label class="field">Colar lista ou conteúdo CSV<textarea id="campaignImport" rows="6" placeholder="nome,telefone,cpf,margem"></textarea></label>
+   <div class="row" style="margin-top:10px"><input type="file" id="campaignFile" accept=".csv,.txt"><button class="btn primary" onclick="campaignImport()">Importar clientes</button></div>
+  </div>
+  <div class="section card"><h3>Mensagem padrão</h3><textarea id="campaignMessage" rows="4" style="width:100%" placeholder="Mensagem padrão da campanha. Use {nome}."></textarea><div class="row" style="margin-top:10px"><button class="btn" onclick="campaignSaveMessage()">Salvar mensagem</button><button class="btn primary" onclick="campaignToggle()">Ativar / pausar campanha</button></div></div>
+  <div class="section card"><h3>Clientes da campanha</h3><div id="campaignContacts" class="tablewrap"></div></div>
+ </section>
+
+ <!-- DISPARO -->
+ <section class="page" id="p-disparo">
+  <div class="pagehead"><div><h2>Disparos</h2><p>Campanhas, números, horários, variações e fila.</p></div><div class="row"><button class="btn" onclick="massLoad()">Atualizar</button><button class="btn primary" onclick="massAction('criar')">+ Novo disparo</button></div></div>
+  <div class="split">
+   <div class="card"><h3>Campanhas cadastradas</h3><div id="massList" class="list"></div></div>
+   <div class="card"><h3>Editor do disparo</h3>
+    <label class="field">Nome<input id="massName"></label>
+    <label class="field">Números selecionados (JSON)<textarea id="massNumbers" rows="2" placeholder='["numero1","numero2"]'></textarea></label>
+    <div class="formgrid">
+     <label class="field">Intervalo em minutos<input id="massInterval" type="number" value="5"></label>
+     <label class="field">Hora inicial<input id="massStart" type="number" value="8"></label>
+     <label class="field">Hora final<input id="massEnd" type="number" value="20"></label>
+    </div>
+    <label class="field">Mensagens e variações (JSON)<textarea id="massMessages" rows="7">[{"texto":"","variacoes":[]}]</textarea></label>
+    <div class="row"><button class="btn" onclick="massAction('salvar')">Salvar</button><button class="btn primary" onclick="massAction('ativar')">Começar disparo</button><button class="btn" onclick="massAction('pausar')">Pausar</button></div>
+    <div id="massStatus" class="muted" style="margin-top:10px"></div>
+   </div>
+  </div>
+ </section>
+
+ <!-- API OFICIAL -->
+ <section class="page" id="p-oficial">
+  <div class="pagehead"><div><h2>API oficial</h2><p>Templates, conexão, campanhas e disparos oficiais.</p></div><div class="row"><button class="btn" onclick="officialLoad()">Atualizar</button><button class="btn primary" onclick="officialAction('criar')">+ Novo disparo</button></div></div>
+  <div class="card"><h3>Conexão e templates</h3><div id="officialConnection" class="muted">Carregando conexão...</div></div>
+  <div class="section split">
+   <div class="card"><h3>Disparos oficiais</h3><div id="officialList" class="list"></div></div>
+   <div class="card"><h3>Configurar disparo</h3>
+    <label class="field">Nome<input id="officialName"></label>
+    <label class="field">Template<input id="officialTemplate"></label>
+    <label class="field">Idioma<input id="officialLanguage" value="pt_BR"></label>
+    <label class="field">Corpo / variáveis (JSON)<textarea id="officialBody" rows="5">[]</textarea></label>
+    <label class="field">Imagem do cabeçalho<input id="officialImage"></label>
+    <div class="formgrid"><label class="field">Início<input id="officialStart" type="number" value="8"></label><label class="field">Fim<input id="officialEnd" type="number" value="20"></label></div>
+    <div class="row" style="margin-top:10px"><button class="btn" onclick="officialAction('salvar')">Salvar</button><button class="btn primary" onclick="officialAction('ativar')">Iniciar disparo</button></div>
+    <div id="officialStatus" class="muted" style="margin-top:10px"></div>
+   </div>
+  </div>
+ </section>
+
+ <!-- VENDAS -->
+ <section class="page" id="p-vendas">
+  <div class="pagehead"><div><h2>Vendas</h2><p>Produção diária, contratos pagos e comissão.</p></div><div class="row"><button class="btn" onclick="salesMetric='liberado';renderSales()">Liberado</button><button class="btn" onclick="salesMetric='pagos';renderSales()">Pagos</button><button class="btn" onclick="salesMetric='comissao';renderSales()">Comissão</button></div></div>
+  <div class="grid3" id="salesKpis"></div>
+  <div class="section card"><h3>Últimos 30 dias</h3><div id="salesChart" class="list"></div></div>
+ </section>
+
+ <!-- FUNIL -->
+ <section class="page" id="p-funil">
+  <div class="pagehead"><div><h2>Funil de conversão</h2><p>Etapas do cliente e motivos de perda.</p></div></div>
+  <div class="card"><div id="funnelRows" class="list"></div></div>
+  <div class="section card"><h3>Motivos de perda</h3><div id="lossReasons" class="list"></div></div>
+ </section>
+
+ <!-- AGENTES -->
+ <section class="page" id="p-agentes">
+  <div class="pagehead"><div><h2>Agentes de IA</h2><p>Desempenho, versões A/B/C e conversão por setor.</p></div><div class="row"><button class="btn" onclick="agentDays=7;renderAgents()">7 dias</button><button class="btn" onclick="agentDays=30;renderAgents()">30 dias</button><button class="btn" onclick="agentDays=90;renderAgents()">90 dias</button></div></div>
+  <div class="grid3" id="agentKpis"></div>
+  <div class="section grid3" id="agentCards"></div>
+ </section>
+
+ <!-- NÚMEROS -->
+ <section class="page" id="p-numeros">
+  <div class="pagehead"><div><h2>Números WhatsApp</h2><p>Status de conexão, QR Code e gerenciamento.</p></div><button class="btn primary" onclick="numberAction('criar')">+ Novo número</button></div>
+  <div class="notice">O painel atualiza o status dos números periodicamente. Um número pode ser criado e acompanhado pelo backend.</div>
+  <div class="section card"><div id="numberList" class="list"></div></div>
+ </section>
+
+ <!-- MATURADOR -->
+ <section class="page" id="p-maturador">
+  <div class="pagehead"><div><h2>Maturador</h2><p>Configuração e histórico do maturador.</p></div><button class="btn" onclick="numberAction('ver')">Atualizar</button></div>
+  <div class="notice">A configuração do maturador é exibida conforme os dados retornados pelo backend de números. Evite ativar ou alterar parâmetros sem revisar a política da plataforma WhatsApp.</div>
+  <div class="card"><h3>Configuração / estado</h3><div id="maturatorConfig" class="muted">Carregando...</div></div>
+  <div class="section card"><h3>Últimas mensagens</h3><div id="maturatorHistory" class="list"></div></div>
+ </section>
+
+ <!-- INDICAÇÕES -->
+ <section class="page" id="p-indicacoes">
+  <div class="pagehead"><div><h2>Programa de indicações</h2><p>Indicadores, indicações e comissões a pagar.</p></div><button class="btn primary" onclick="newReferrer()">+ Cadastrar indicador</button></div>
+  <div class="grid3" id="referralKpis"></div>
+  <div class="section card"><h3>Valores a pagar</h3><div id="referralPay" class="list"></div></div>
+  <div class="section card"><h3>Indicadores</h3><div id="referralPeople" class="list"></div></div>
+  <div class="section card"><h3>Indicações</h3><div id="referralLeads" class="list"></div></div>
+ </section>
+
+ <!-- FINANCEIRO -->
+ <section class="page" id="p-financeiro">
+  <div class="pagehead"><div><h2>Financeiro</h2><p>Receita, gastos, lucro, custo por lead e por contrato.</p></div><div class="row"><button class="btn" onclick="changeFinMonth(-1)">←</button><b id="finMonth">—</b><button class="btn" onclick="changeFinMonth(1)">→</button></div></div>
+  <div class="grid" id="financeKpis"></div>
+  <div class="section split">
+   <div class="card"><h3>Lançar gasto</h3>
+    <form onsubmit="saveExpense(event)">
+     <div class="formgrid">
+      <label class="field">Valor<input id="expenseValue" placeholder="150,00" required></label>
+      <label class="field">Data<input id="expenseDate" type="date" required></label>
+      <label class="field">Categoria<select id="expenseCategory"><option value="disparos">Disparos</option><option value="trafego">Tráfego pago</option><option value="bms">BMs</option><option value="numeros">Números</option><option value="outros">Outros</option></select></label>
+      <label class="field">Quantidade de disparos<input id="expenseQty" type="number"></label>
+      <label class="field full">Descrição<input id="expenseDescription"></label>
+     </div>
+     <button class="btn primary" style="margin-top:12px">Salvar gasto</button>
+    </form>
+    <div id="financeError" class="error"></div>
+   </div>
+   <div class="card"><h3>Gastos por categoria</h3><div id="financeCategories" class="list"></div></div>
+  </div>
+  <div class="section grid3" id="costChannels"></div>
+  <div class="section card"><h3>Histórico de gastos</h3><div id="expenseList" class="list"></div></div>
+ </section>
+
+ <!-- SIMULAÇÃO -->
+ <section class="page" id="p-simulacao">
+  <div class="pagehead"><div><h2>Simulação e projeções</h2><p>Projeção mensal e cenários hipotéticos.</p></div><button class="btn" onclick="useRealNumbers()">Usar números reais</button></div>
+  <div id="projection" class="grid3"></div>
+  <div class="section card"><h3>Simulador de produção</h3>
+   <div class="formgrid">
+    <label class="field">Clientes por dia<input id="simClients" type="number" value="100"></label>
+    <label class="field">Conversão (%)<input id="simConversion" type="number" value="5" step=".5"></label>
+    <label class="field">Valor médio liberado<input id="simValue" type="number" value="2500"></label>
+    <label class="field">Comissão (%)<input id="simCommission" type="number" value="5" step=".1"></label>
+    <label class="field">Dias de operação<input id="simDays" type="number" value="22"></label>
+   </div>
+   <button class="btn primary" onclick="calculateProjection()" style="margin-top:12px">Calcular cenário</button>
+   <div id="simResult" class="section"></div>
+  </div>
+ </section>
+
+ <!-- CHAT TESTE -->
+ <section class="page" id="p-teste">
+  <div class="pagehead"><div><h2>Chat de teste</h2><p>Converse como se fosse um cliente e teste os agentes.</p></div><button class="btn" onclick="newTestClient()">Novo cliente de teste</button></div>
+  <div class="notice">O chat de teste utiliza os endpoints /gmcred/chat, /gmcred/chat/novas e /gmcred/chat/evento existentes no projeto.</div>
+  <div class="card">
+   <div class="row spread"><b id="testClient">Cliente de teste</b><span id="testStatus" class="tag">Aguardando</span></div>
+   <div id="testMessages" class="chatbox" style="margin:12px 0"></div>
+   <textarea id="testText" rows="2" style="width:100%" placeholder="Mensagem do cliente"></textarea>
+   <div class="row" style="margin-top:10px"><button class="btn primary" onclick="sendTestMessage()">Enviar mensagem</button><button class="btn" onclick="testEvent('assinou')">Simular assinatura</button><button class="btn" onclick="testEvent('pagou')">Simular pagamento</button><button class="btn danger" onclick="clearTests()">Apagar testes</button></div>
+  </div>
+ </section>
+
+ <!-- CONFIGURAÇÕES -->
+ <section class="page" id="p-config">
+  <div class="pagehead"><div><h2>Configurações</h2><p>Conexão do painel e sessão.</p></div></div>
+  <div class="card">
+   <label class="field">URL base do webhook<input id="configBase"></label>
+   <button class="btn primary" onclick="saveBase()" style="margin-top:12px">Salvar endereço</button>
+   <p class="muted">A chave é mantida apenas na sessão do navegador.</p>
+   <div id="serverInfo" class="muted"></div>
+  </div>
+ </section>
+
+ </div>
+</main>
+</div>
+
+<div id="modal" class="modal hidden" onclick="if(event.target===this)closeModal()">
+ <div class="modalbox"><div class="modalhead"><h3 id="modalTitle">Detalhes</h3><button class="btn" onclick="closeModal()">Fechar ✕</button></div><div id="modalBody"></div></div>
 </div>
 
 <script>
+/* =========================================================
+   CONFIGURAÇÃO E ESTADO
+========================================================= */
 const $=id=>document.getElementById(id);
+let BASE=localStorage.getItem('gm_base')||'https://rarelookingorca-n8n.cloudfy.live/webhook';
+let TOKEN=sessionStorage.getItem('gm_token')||'';
+let state={},crm=[],chatData=[],selectedChat=null,chatConv=null;
+let campaignData={},massData={},officialData={},numberData={},referralData={},financeData={};
+let selectedMass=0,selectedOfficial=0,financeMonth=new Date().toISOString().slice(0,7);
+let period='hoje',salesMetric='liberado',agentDays=30;
+let testPhone=localStorage.getItem('gm_test_phone')||'';
+let testAfter=0,testPoll=null,testHistory=[];
 
-let BASE=localStorage.getItem('gm_api') ||
- 'https://rarelookingorca-n8n.cloudfy.live/webhook';
-
-let token=sessionStorage.getItem('gm_token') || '';
-let state={};
-let clients=[];
-let chats=[];
-let selectedChat=null;
-let finance={};
-
-/* Normaliza a URL para sempre terminar em /webhook */
-function normalizeBase(value){
- let url=String(value||'').trim().replace(/\/+$/,'');
- url=url.replace(/\/escritorio\/estado$/,'');
- if(!url.endsWith('/webhook'))url+='/webhook';
- return url;
+const TITLES={
+ hoje:'Início',escritorio:'Escritório',conversas:'Conversas',clientes:'Clientes / CRM',
+ consultas:'Consulta V8 / Unno',hub:'HUB CLT / FGTS',propostas:'Contratos e propostas',
+ campanha:'Campanha',disparo:'Disparos',oficial:'API oficial',vendas:'Vendas',
+ funil:'Funil',agentes:'Agentes',numeros:'Números',maturador:'Maturador',
+ indicacoes:'Indicações',financeiro:'Financeiro',simulacao:'Simulação',
+ teste:'Chat teste',config:'Configurações'
+};
+const brl=v=>(Number(v)||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const digits=v=>String(v||'').replace(/\D/g,'');
+const dateBR=v=>v?new Date(v).toLocaleString('pt-BR'):'—';
+const safeJSON=(s,fallback)=>{try{return JSON.parse(s)}catch{return fallback}};
+function normalizeBase(v){
+ let x=String(v||'').trim().replace(/\/+$/,'');
+ x=x.replace(/\/escritorio\/estado$/,'');
+ if(!x.endsWith('/webhook'))x+='/webhook';
+ return x;
 }
+function showModal(title,html){$('modalTitle').textContent=title;$('modalBody').innerHTML=html;$('modal').classList.remove('hidden')}
+function closeModal(){$('modal').classList.add('hidden')}
+function setStatus(text,kind='warn'){$('status').textContent=text;$('status').className='tag '+kind}
 
-const money=v=>(Number(v)||0).toLocaleString('pt-BR',{
- style:'currency',currency:'BRL'
-});
-
-function escapeHtml(v){
- return String(v??'').replace(/[&<>"']/g,c=>({
-  '&':'&amp;',
-  '<':'&lt;',
-  '>':'&gt;',
-  '"':'&quot;',
-  "'":'&#39;'
- }[c]));
-}
-
-/* Comunicação com o backend */
-async function request(path,method='GET',data={}){
- const url=BASE+path;
- let response;
-
+/* =========================================================
+   API CENTRAL
+========================================================= */
+async function api(path,method='GET',data={}){
+ if(!TOKEN)throw Error('Sessão não iniciada.');
+ let url=BASE+path,opts={method,cache:'no-store'};
  if(method==='GET'){
   const u=new URL(url);
-  Object.entries(data).forEach(([k,v])=>{
-   if(v!==undefined&&v!==null)u.searchParams.set(k,v);
-  });
-  response=await fetch(u.toString(),{
-   method:'GET',
-   cache:'no-store'
-  });
+  Object.entries({k:TOKEN,...data}).forEach(([k,v])=>{if(v!==undefined&&v!==null)u.searchParams.set(k,v)});
+  url=u.toString();
  }else{
-  const body=new URLSearchParams();
-  Object.entries(data).forEach(([k,v])=>{
-   if(v!==undefined&&v!==null)body.set(k,v);
-  });
-
-  response=await fetch(url,{
-   method:'POST',
-   body
-  });
+  const body=new URLSearchParams({k:TOKEN});
+  Object.entries(data).forEach(([k,v])=>{if(v!==undefined&&v!==null)body.set(k,typeof v==='object'?JSON.stringify(v):String(v))});
+  opts.body=body;
  }
-
- if(response.status===401){
-  throw new Error('Acesso não autorizado. Verifique sua chave ou faça login novamente.');
- }
-
- if(!response.ok){
-  throw new Error('Erro HTTP '+response.status);
- }
-
- return response.json();
+ const r=await fetch(url,opts);
+ if(r.status===401){logout();throw Error('Sessão expirada ou chave inválida.')}
+ const txt=await r.text();
+ const j=safeJSON(txt,{});
+ if(!r.ok)throw Error(j.erro||('HTTP '+r.status));
+ return j;
 }
-
-/* LOGIN */
 async function login(){
  BASE=normalizeBase($('server').value);
- const key=$('masterKey').value.trim();
-
- if(!key){
-  $('loginError').textContent='Digite sua chave de acesso.';
-  return;
- }
-
+ const k=$('key').value.trim();
+ if(!k){$('loginError').textContent='Digite sua chave.';return}
  $('loginError').textContent='Conectando...';
-
  try{
-  const result=await request('/escritorio/login','POST',{k:key});
-
-  if(!result.token){
-   throw new Error(result.erro||'O servidor não retornou o token de sessão.');
-  }
-
-  token=result.token;
-
-  sessionStorage.setItem('gm_token',token);
-  localStorage.setItem('gm_api',BASE);
-
-  $('login').classList.add('hidden');
-  $('app').classList.remove('hidden');
-  $('configServer').value=BASE;
-
-  $('masterKey').value='';
+  const r=await fetch(BASE+'/escritorio/login',{method:'POST',body:new URLSearchParams({k})});
+  const j=await r.json();
+  if(!r.ok||!j.token)throw Error(j.erro||'Chave inválida ou servidor indisponível.');
+  TOKEN=j.token;sessionStorage.setItem('gm_token',TOKEN);localStorage.setItem('gm_base',BASE);
+  $('login').classList.add('hidden');$('app').classList.remove('hidden');
+  $('configBase').value=BASE;$('key').value='';
   await refresh();
-
- }catch(error){
-  $('loginError').textContent=error.message;
-  console.error('Erro no login:',error);
- }
+ }catch(e){$('loginError').textContent=e.message;console.error(e)}
 }
-
-/* SAIR */
 function logout(){
- token='';
- sessionStorage.removeItem('gm_token');
- $('app').classList.add('hidden');
- $('login').classList.remove('hidden');
- $('loginError').textContent='';
+ TOKEN='';sessionStorage.removeItem('gm_token');
+ clearInterval(testPoll);
+ $('app').classList.add('hidden');$('login').classList.remove('hidden');
 }
-
-/* NAVEGAÇÃO */
-function page(id,button){
- document.querySelectorAll('.content>section').forEach(section=>{
-  section.classList.add('hidden');
- });
-
- $(id).classList.remove('hidden');
-
- document.querySelectorAll('.menu button').forEach(b=>{
-  b.classList.remove('active');
- });
-
- if(button)button.classList.add('active');
-
- const titles={
-  dashboard:'Visão geral',
-  clientes:'Clientes',
-  conversas:'WhatsApp',
-  propostas:'Propostas',
-  financeiro:'Financeiro',
-  consultas:'Consultas',
-  config:'Configurações',
-  clientDetail:'Ficha do cliente'
- };
-
- $('pageTitle').textContent=titles[id]||'Cliente';
-
- if(id==='clientes')loadClients();
- if(id==='conversas')loadChats();
- if(id==='financeiro')loadFinance();
- if(id==='propostas')renderProposals();
+function saveBase(){BASE=normalizeBase($('configBase').value);localStorage.setItem('gm_base',BASE);$('configBase').value=BASE;alert('Endereço salvo. Faça login novamente para testar.')}
+function navigate(page){
+ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+ $('p-'+page).classList.add('active');
+ document.querySelectorAll('.nav').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
+ $('title').textContent=TITLES[page]||page;
+ if(page==='conversas')loadChats();
+ if(page==='campanha')campaignLoad();
+ if(page==='disparo')massLoad();
+ if(page==='oficial')officialLoad();
+ if(page==='numeros'||page==='maturador')numberLoad();
+ if(page==='indicacoes')referralLoad();
+ if(page==='financeiro')financeLoad();
+ if(page==='agentes')renderAgents();
+ if(page==='vendas')renderSales();
+ if(page==='funil')renderFunnel();
+ if(page==='propostas')renderProposals();
+ if(page==='clientes')renderCRM();
+ if(page==='teste')startTestPoll();
 }
+document.querySelectorAll('.nav').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.page)));
 
-/* PAINEL PRINCIPAL */
+/* =========================================================
+   CARREGAMENTO PRINCIPAL
+========================================================= */
 async function refresh(){
- if(!token)return;
-
+ if(!TOKEN)return;
+ setStatus('Atualizando','warn');
  try{
-  state=await request('/escritorio/estado','GET',{
-   k:token,
-   teste:'0',
-   partes:'crm'
-  });
-
-  $('connection').textContent='Servidor conectado';
-  $('connection').className='status green';
-
-  renderDashboard();
-
-  clients=Array.isArray(state.crm)?state.crm:[];
-  renderClients();
-  renderProposals();
-
- }catch(error){
-  $('connection').textContent='Erro de conexão';
-  $('connection').className='status red';
-  console.error('Erro ao carregar painel:',error);
- }
+  state=await api('/escritorio/estado','GET',{teste:'0',partes:'tudo'});
+  crm=state.crm||[];
+  renderAll();
+  setStatus('Conectado','ok');
+ }catch(e){setStatus('Falha de conexão','bad');console.error(e)}
+}
+function renderAll(){
+ renderToday();renderOffice();renderCRM();renderProposals();
+ renderFunnel();renderSales();renderAgents();
+}
+function renderToday(){
+ const r=state.resumo||{},n=r.numeros||{},meta=state.meta||{};
+ const R=(state.resumo_v2||{})[period==='hoje'?'hoje':period]||{};
+ const N=R.numeros||n;
+ $('kAtivos').textContent=r.em_andamento??'—';
+ $('kPagos').textContent=N.pagos??'—';
+ $('kLiberado').textContent=brl(N.liberado);
+ $('kComissao').textContent=brl(N.comissao);
+ const target=Number(meta.meta_valor||7000),done=Number(meta.valor_hoje||0);
+ $('metaValor').textContent=brl(done);
+ $('metaBar').style.width=Math.min(100,done/target*100)+'%';
+ $('metaInfo').textContent=Math.round(done/target*100)+'% da meta de '+brl(target);
+ const S=state.saude||{};
+ $('health').innerHTML=[['n8n',S.n8n],['WhatsApp',S.whatsapp],['V8',S.v8]].map(([k,v])=>
+ `<div class="listitem"><span>${k}</span><span class="tag ${v?.ok===true?'ok':v?.ok===false?'bad':'warn'}">${v?.detalhe||'Sem informação'}</span></div>`).join('');
+ const events=state.eventos||[];
+ $('feed').innerHTML=events.slice(0,12).map(e=>`<div class="listitem"><span>${esc(e.descricao)}</span><small class="muted">${dateBR(e.criado_em)}</small></div>`).join('')||'<div class="empty">Nenhum evento registrado.</div>';
+ const attention=(state.leads||[]).filter(l=>l.parado);
+ $('attention').innerHTML=attention.length?attention.slice(0,6).map(l=>`<div class="listitem"><span>${esc(l.nome||l.telefone)}</span><button class="btn small" onclick="openClient(${Number(l.id)})">Abrir</button></div>`).join(''):'Tudo em ordem.';
+ $('departments').innerHTML=(state.setores||[]).map(s=>`<div class="listitem"><div><b>${esc(s.nome)}</b><div class="muted">${s.leads_ativos||0} clientes · ${s.leads_parados||0} parados</div></div><span class="tag">${s.sla_minutos?s.sla_minutos+' min SLA':'—'}</span></div>`).join('')||'<div class="empty">Sem departamentos retornados.</div>';
+}
+function renderOffice(){
+ const R=state.resumo||{};
+ $('officeStats').innerHTML=[
+  ['Clientes ativos',R.em_andamento],['Clientes parados',R.parados],['Setores',(state.setores||[]).length]
+ ].map(([a,b])=>`<div class="card kpi"><small>${a}</small><strong>${b??0}</strong></div>`).join('');
+ $('sectors').innerHTML=(state.setores||[]).map(s=>`<div class="listitem"><div><b>${esc(s.nome)}</b><div class="muted">${esc(s.descricao||'')}</div></div><div>${s.leads_ativos||0} ativos · ${s.leads_parados||0} parados</div></div>`).join('');
+ const stalled=(state.leads||[]).filter(l=>l.parado);
+ $('stalled').innerHTML=stalled.map(l=>`<div class="listitem"><div><b>${esc(l.nome||'Sem nome')}</b><div class="muted">${esc(l.telefone||'')} · ${esc(l.setor||'')}</div></div><button class="btn small" onclick="openClient(${Number(l.id)})">Ver ficha</button></div>`).join('')||'<div class="empty">Nenhum cliente parado.</div>';
 }
 
-/* INDICADORES */
-function renderDashboard(){
- const r=state.resumo||{};
- const n=r.numeros||{};
-
- $('kActive').textContent=r.em_andamento??'—';
- $('kPaid').textContent=n.pagos??'—';
- $('kReleased').textContent=money(n.liberado);
- $('kCommission').textContent=money(n.comissao);
-
- $('summary').innerHTML=`
-  <p>Entraram: <b>${n.entraram??0}</b></p>
-  <p>Simularam: <b>${n.simularam??0}</b></p>
-  <p>Propostas: <b>${n.propostas??0}</b></p>
-  <p>Assinaram: <b>${n.assinaram??0}</b></p>
-  <p>Pagos: <b>${n.pagos??0}</b></p>
- `;
+/* =========================================================
+   CRM E FICHA
+========================================================= */
+function crmFiltered(){
+ const q=($('crmSearch')?.value||'').toLowerCase(),d=digits(q),g=$('crmGroup')?.value||'todos';
+ return crm.filter(c=>(g==='todos'||c.grupo===g)&&(!q||
+  String(c.nome||'').toLowerCase().includes(q)||
+  (d.length>=3&&(digits(c.telefone).includes(d)||digits(c.cpf).includes(d)))));
 }
-
-/* CLIENTES */
-async function loadClients(){
- try{
-  if(!state.crm)await refresh();
-  clients=Array.isArray(state.crm)?state.crm:[];
-  renderClients();
- }catch(error){
-  alert(error.message);
- }
+function renderCRM(){
+ const list=crmFiltered();
+ const counts=['todos','andamento','com_margem','sem_margem','perdido','pago'];
+ $('crmCounts').innerHTML=counts.map(g=>`<span class="tag">${g}: ${crm.filter(c=>g==='todos'||c.grupo===g).length}</span>`).join('');
+ $('crmRows').innerHTML=list.slice(0,500).map(c=>`<tr>
+ <td>${esc(c.nome||'Sem nome')}</td><td>${esc(c.telefone||'—')}</td>
+ <td>${esc(c.cpf||'—')}${c.cpf_da_base?' (base)':''}</td>
+ <td>${esc(c.produto||'—')}</td><td><span class="tag ${c.grupo==='pago'?'ok':c.grupo==='perdido'?'bad':'warn'}">${esc(c.situacao||c.grupo||'—')}</span></td>
+ <td>${c.oferta?brl(c.oferta.valor)+' / '+c.oferta.prazo+'x':c.margem?brl(c.margem):'—'}</td>
+ <td>${dateBR(c.ultima)}</td><td><button class="btn small" onclick="openClient(${Number(c.id)})">Ficha</button></td></tr>`).join('');
 }
-
-function renderClients(){
- const q=($('clientSearch')?.value||'').toLowerCase();
-
- const list=clients.filter(c=>
-  [c.nome,c.cpf,c.telefone,c.situacao]
-   .join(' ').toLowerCase().includes(q)
- );
-
- $('clientRows').innerHTML=list.map(c=>`
-  <tr>
-   <td>${escapeHtml(c.nome||'Sem nome')}</td>
-   <td>${escapeHtml(c.cpf||'—')}</td>
-   <td>${escapeHtml(c.produto||'—')}</td>
-   <td>
-    <span class="status ${
-     c.grupo==='pago'?'green':
-     c.grupo==='perdido'?'red':'yellow'
-    }">${escapeHtml(c.situacao||'—')}</span>
-   </td>
-   <td>${money(c.oferta?.valor)}</td>
-   <td>
-    <button class="btn" onclick="openClient(${Number(c.id)})">
-     Abrir
-    </button>
-   </td>
-  </tr>
- `).join('');
+function exportCRM(){
+ const rows=[['Nome','Telefone','CPF','Produto','Situação','Grupo','Margem']];
+ crmFiltered().forEach(c=>rows.push([c.nome,c.telefone,c.cpf,c.produto,c.situacao,c.grupo,c.margem]));
+ const csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');
+ download('gmcred-clientes.csv','\ufeff'+csv,'text/csv;charset=utf-8');
 }
-
-/* FICHA DO CLIENTE */
+function download(name,content,type){
+ const a=document.createElement('a'),url=URL.createObjectURL(new Blob([content],{type}));
+ a.href=url;a.download=name;a.click();URL.revokeObjectURL(url);
+}
 async function openClient(id){
- page('clientDetail');
-
  try{
-  const f=await request('/escritorio/cliente','GET',{
-   k:token,
-   id
-  });
-
+  const f=await api('/escritorio/cliente','GET',{id});
   const l=f.lead||{};
-
-  $('clientInfo').innerHTML=`
-   <h2>${escapeHtml(l.nome||'Cliente')}</h2>
-   <p>Telefone: ${escapeHtml(l.telefone||'—')}</p>
-   <p>CPF: ${escapeHtml(l.cpf||'—')}</p>
-   <p>Produto: ${escapeHtml(l.produto||'—')}</p>
-   <p>Valor: ${money(l.valor)}</p>
-
-   <h3>Histórico de conversa</h3>
-   ${(f.conversa||[]).map(m=>`
-    <p>${escapeHtml(m.direcao)}: ${escapeHtml(m.conteudo)}</p>
-   `).join('')}
-
-   <h3>Contratos</h3>
-   ${(f.contratos||[]).map(c=>`
-    <p>${escapeHtml(c.etapa||'')} · ${money(c.valor_liberado)}</p>
-   `).join('')}
-  `;
-
- }catch(error){
-  $('clientInfo').textContent=error.message;
- }
+  showModal('Ficha de '+(l.nome||'cliente'),`
+   <div class="grid3">
+    <div class="card"><small>Telefone</small><p>${esc(l.telefone||'—')}</p></div>
+    <div class="card"><small>CPF</small><p>${esc(l.cpf||'—')}</p></div>
+    <div class="card"><small>Produto / valor</small><p>${esc(l.produto||'—')} · ${brl(l.valor)}</p></div>
+   </div>
+   <div class="row section">
+    ${l.aguardando==='humano'?`<button class="btn primary" onclick="leadAction('devolver',${id})">Devolver ao agente</button>`:`<button class="btn primary" onclick="leadAction('assumir',${id})">Assumir atendimento</button>`}
+    <select id="finishReason"><option>sem interesse</option><option>já tem empréstimo</option><option>número errado</option><option>não contatar</option><option>sem margem</option><option>atendimento concluído</option></select>
+    <button class="btn danger" onclick="finishLead(${id})">Finalizar atendimento</button>
+   </div>
+   <h3 class="section">Contratos</h3>${(f.contratos||[]).map(c=>`<div class="listitem">${esc(c.etapa)} · ${brl(c.valor_liberado)} · comissão ${brl(c.comissao)}</div>`).join('')||'<p class="muted">Sem contratos.</p>'}
+   <h3 class="section">Conversa</h3><div class="chatbox">${(f.conversa||[]).map(m=>`<div class="bubble ${m.direcao==='entrada'?'':'out'}">${esc(m.conteudo)}<small>${dateBR(m.criado_em)}</small></div>`).join('')}</div>
+   <h3 class="section">Linha do tempo</h3>${(f.eventos||[]).map(e=>`<div class="listitem">${esc(e.descricao)} <small>${dateBR(e.criado_em)}</small></div>`).join('')}
+  `);
+ }catch(e){alert('Ficha: '+e.message)}
+}
+async function leadAction(tipo,id){
+ try{const j=await api('/escritorio/acao','POST',{tipo,lead_id:id});if(!j.ok)throw Error(j.erro||'Ação não concluída');await refresh();openClient(id)}catch(e){alert(e.message)}
+}
+async function finishLead(id){
+ const motivo=$('finishReason')?.value||'atendimento concluído';
+ try{const j=await api('/escritorio/acao','POST',{tipo:'finalizar',lead_id:id,motivo});if(!j.ok)throw Error(j.erro||'Não foi possível finalizar');closeModal();await refresh()}catch(e){alert(e.message)}
 }
 
-/* WHATSAPP */
+/* =========================================================
+   CONVERSAS
+========================================================= */
+async function chatApi(acao,extra={}){
+ return api('/escritorio/atendimento','POST',{acao,...extra});
+}
 async function loadChats(){
- try{
-  const d=await request('/escritorio/atendimento','POST',{
-   k:token,
-   acao:'lista'
-  });
-
-  chats=d.conversas||[];
-  renderChats();
-
- }catch(error){
-  $('chatList').textContent=error.message;
- }
+ try{chatData=await chatApi('lista');renderChatList();if(selectedChat)await openChat(selectedChat)}
+ catch(e){$('chatList').innerHTML='<div class="empty">'+esc(e.message)+'</div>'}
 }
-
-function renderChats(){
- const q=($('chatSearch')?.value||'').toLowerCase();
-
- $('chatList').innerHTML=chats.filter(c=>
-  (String(c.nome||'')+' '+String(c.telefone||''))
-   .toLowerCase().includes(q)
- ).map(c=>`
-  <button class="btn"
-   style="width:100%;text-align:left;margin:4px 0"
-   onclick="openChat(${Number(c.id)})">
-   <b>${escapeHtml(c.nome||c.telefone)}</b><br>
-   <small>${escapeHtml(c.ultima||'')}</small>
-  </button>
- `).join('');
+function renderChatList(){
+ const q=($('chatSearch').value||'').toLowerCase();
+ const L=chatData.conversas||[];
+ $('chatList').innerHTML=L.filter(c=>(c.nome+' '+c.telefone).toLowerCase().includes(q)).map(c=>
+ `<button class="btn" style="width:100%;text-align:left" onclick="openChat(${Number(c.id)})"><b>${esc(c.nome||c.telefone)}</b><br><small class="muted">${esc(c.ultima||'')}</small></button>`
+ ).join('')||'<div class="empty">Nenhuma conversa.</div>';
 }
-
 async function openChat(id){
  selectedChat=id;
-
  try{
-  const d=await request('/escritorio/atendimento','POST',{
-   k:token,
-   acao:'conversa',
-   id
-  });
-
-  $('chatHeader').textContent=d.lead?.nome||'Conversa';
-
-  $('chatMessages').innerHTML=(d.msgs||[]).map(m=>`
-   <div class="msg ${m.dir==='entrada'?'in':'out'}">
-    ${escapeHtml(m.txt)}
-   </div>
-  `).join('');
-
+  chatConv=await chatApi('conversa',{id});
+  const l=chatConv.lead||{};
+  $('chatHead').innerHTML=`<b>${esc(l.nome||l.telefone||'Cliente')}</b> · ${esc(l.situacao||'')} · ${l.humano?'Atendimento humano':'IA ativa'}`;
+  $('chatMessages').innerHTML=(chatConv.msgs||[]).map(m=>`<div class="bubble ${m.dir==='entrada'?'':'out'}">${esc(m.txt)}<small>${esc(m.modo||m.st||'')} · ${dateBR(m.em)}</small></div>`).join('');
   $('chatMessages').scrollTop=$('chatMessages').scrollHeight;
-
- }catch(error){
-  alert(error.message);
- }
+ }catch(e){alert(e.message)}
 }
-
-async function sendMessage(){
- const text=$('chatText').value.trim();
-
- if(!selectedChat||!text)return;
-
- try{
-  const d=await request('/escritorio/atendimento','POST',{
-   k:token,
-   acao:'enviar',
-   id:selectedChat,
-   texto:text
-  });
-
-  if(!d.ok)throw new Error(d.erro||'Falha no envio.');
-
-  $('chatText').value='';
-  await openChat(selectedChat);
-
- }catch(error){
-  alert(error.message);
- }
+async function sendChat(){
+ const texto=$('chatText').value.trim();if(!texto||!selectedChat)return;
+ try{const j=await chatApi('enviar',{id:selectedChat,texto});if(!j.ok)throw Error(j.erro||'Falha ao enviar');$('chatText').value='';await openChat(selectedChat)}
+ catch(e){alert(e.message)}
 }
-
-async function returnAI(){
+async function returnAgent(){if(!selectedChat)return;try{await chatApi('devolver',{id:selectedChat});await openChat(selectedChat)}catch(e){alert(e.message)}}
+async function finishChat(){
  if(!selectedChat)return;
-
- try{
-  await request('/escritorio/atendimento','POST',{
-   k:token,
-   acao:'devolver',
-   id:selectedChat
-  });
-
-  await openChat(selectedChat);
-
- }catch(error){
-  alert(error.message);
- }
+ try{const j=await chatApi('finalizar',{id:selectedChat,motivo:$('chatReason').value});if(!j.ok)throw Error(j.erro||'Falha ao finalizar');await loadChats();$('chatMessages').innerHTML='';selectedChat=null}
+ catch(e){alert(e.message)}
 }
 
-/* PROPOSTAS */
+/* =========================================================
+   V8 E UNNO
+========================================================= */
+let v8CPF='',v8Consult=null,v8Offers=[],unnoApplication='';
+async function creditApi(path,acao,cpf,dados={}){
+ return api(path,'POST',{acao,cpf,dados:JSON.stringify(dados)});
+}
+async function consultCredit(ev){
+ ev.preventDefault();
+ const cpf=digits($('v8Cpf').value);
+ if(cpf.length!==11){$('v8Status').textContent='CPF inválido.';return}
+ v8CPF=cpf;v8Consult=null;v8Offers=[];unnoApplication='';
+ $('v8Status').textContent='Consultando V8 e Unno...';
+ $('v8Result').textContent='Consultando...';$('unnoResult').textContent='Consultando...';
+ $('v8Simulation').hidden=true;$('bestOffer').textContent='Aguardando resultados.';
+ const dados={nome:$('v8Nome').value.trim(),nascimento:$('v8Birth').value.trim()};
+ const unnoDados={...dados,celular:$('unnoPhone').value.trim(),email:$('unnoEmail').value.trim()};
+ const unnoTask=(async()=>{
+  try{
+   let d=await creditApi('/escritorio/unno','abrir',cpf,unnoDados);
+   if(d.application_id)unnoApplication=d.application_id;
+   for(let i=0;i<120&&d.ok&&['aguardando_termo','processando'].includes(d.situacao);i++){
+    $('unnoResult').textContent='Unno: '+d.situacao+'...';
+    await new Promise(r=>setTimeout(r,5000));
+    d=await creditApi('/escritorio/unno','status',cpf,{application_id:unnoApplication});
+   }
+   if(d.situacao==='ofertas')d=await creditApi('/escritorio/unno','ofertas',cpf,{application_id:unnoApplication});
+   $('unnoResult').innerHTML=`<pre>${esc(JSON.stringify(d,null,2))}</pre>`;
+  }catch(e){$('unnoResult').textContent='Unno: '+e.message}
+ })();
+ try{
+  let d=await creditApi('/escritorio/v8','consultar_cpf',cpf,dados);
+  for(let i=1;d&&['processando','sem_consulta'].includes(d.situacao)&&i<=36;i++){
+   $('v8Status').textContent='V8 processando... '+i*5+'s';
+   await new Promise(r=>setTimeout(r,5000));
+   d=await creditApi('/escritorio/v8','status',cpf,{});
+  }
+  v8Consult=d;
+  $('v8Result').innerHTML=`<pre>${esc(JSON.stringify(d,null,2))}</pre>`;
+  if(d.margem){
+   $('v8Installment').value=d.margem;
+   $('v8Simulation').hidden=false;
+  }
+  $('v8Status').textContent='Consulta V8 concluída.';
+ }catch(e){$('v8Status').textContent=e.message;$('v8Result').textContent='Erro na consulta.'}
+ await unnoTask;
+}
+async function simulateV8(){
+ if(!v8Consult?.consult_id)return alert('Faça uma consulta V8 primeiro.');
+ const parcela=Number($('v8Installment').value),prazo=$('v8Term').value;
+ if(!parcela)return alert('Informe a parcela.');
+ $('simulationResults').textContent='Simulando...';
+ try{
+  const d=await creditApi('/escritorio/v8','simular','',{consult_id:v8Consult.consult_id,margem:v8Consult.margem,parcela,prazo});
+  v8Offers=d.ofertas||[];
+  $('simulationResults').innerHTML=`<pre>${esc(JSON.stringify(d,null,2))}</pre>`;
+  const best=[...v8Offers].sort((a,b)=>Number(b.valor)-Number(a.valor))[0];
+  $('bestOffer').innerHTML=best?`<b>${brl(best.valor)}</b><br>${best.prazo}x de ${brl(best.parcela)}`:'Nenhuma oferta retornada.';
+ }catch(e){$('simulationResults').textContent=e.message}
+}
+
+/* =========================================================
+   PROPOSTAS
+========================================================= */
 function renderProposals(){
- const list=clients.filter(c=>
-  c.oferta||c.grupo==='pago'||Number(c.etapa)>=4
- );
-
- $('proposalRows').innerHTML=list.map(c=>`
-  <tr>
-   <td>${escapeHtml(c.nome||'—')}</td>
-   <td>${escapeHtml(c.cpf||'—')}</td>
-   <td>${escapeHtml(c.produto||'—')}</td>
-   <td>${escapeHtml(c.situacao||'—')}</td>
-   <td>${money(c.oferta?.valor)}</td>
-   <td>${c.ultima?new Date(c.ultima).toLocaleString('pt-BR'):'—'}</td>
-  </tr>
- `).join('');
+ const L=state.contratos||[];
+ const paid=L.filter(c=>c.etapa==='pago');
+ $('proposalKpis').innerHTML=[
+ ['Contratos',L.length],['Pagos',paid.length],
+ ['Liberado',brl(paid.reduce((s,c)=>s+Number(c.valor_liberado||0),0))],
+ ['Comissão',brl(paid.reduce((s,c)=>s+Number(c.comissao||0),0))]
+ ].map(([a,b])=>`<div class="card kpi"><small>${a}</small><strong>${b}</strong></div>`).join('');
+ const q=($('proposalSearch')?.value||'').toLowerCase(),stage=$('proposalStage')?.value||'';
+ $('proposalRows').innerHTML=L.filter(c=>(!stage||c.etapa===stage)&&(`${c.nome} ${c.cpf}`.toLowerCase().includes(q))).map(c=>`<tr>
+ <td>${esc(c.nome||'—')}</td><td>${esc(c.cpf||'—')}</td><td>${esc(c.produto||'—')}</td>
+ <td><span class="tag ${c.etapa==='pago'?'ok':'warn'}">${esc(c.etapa||'—')}</span></td>
+ <td>${brl(c.valor_liberado)}</td><td>${brl(c.comissao)}</td><td>${dateBR(c.dt_pagamento||c.criado_em)}</td></tr>`).join('');
 }
 
-/* FINANCEIRO */
-async function loadFinance(){
+/* =========================================================
+   CAMPANHA
+========================================================= */
+async function campaignLoad(){
  try{
-  finance=await request('/escritorio/financeiro','POST',{
-   k:token,
-   acao:'ver',
-   mes:new Date().toISOString().slice(0,7)
-  });
-
-  $('finRevenue').textContent=money(finance.receita);
-  $('finCosts').textContent=money(finance.total_gastos);
-
-  $('finProfit').textContent=money(
-   Number(finance.receita||0)-Number(finance.total_gastos||0)
-  );
-
-  $('finPaid').textContent=finance.contratos_pagos??0;
-
-  $('costRows').innerHTML=(finance.gastos||[]).map(g=>`
-   <tr>
-    <td>${escapeHtml(g.data||'')}</td>
-    <td>${escapeHtml(g.categoria||'')}</td>
-    <td>${escapeHtml(g.descricao||'')}</td>
-    <td>${money(g.valor)}</td>
-    <td>
-     <button class="btn" onclick="deleteCost(${Number(g.id)})">
-      Apagar
-     </button>
-    </td>
-   </tr>
-  `).join('');
-
- }catch(error){
-  console.error('Erro no financeiro:',error);
-  alert('Financeiro: '+error.message);
- }
+  campaignData=await api('/escritorio/campanha','POST',{acao:'ver'});
+  renderCampaign();
+ }catch(e){$('campaignContacts').textContent=e.message}
+}
+function renderCampaign(){
+ const d=campaignData,C=d.config||{};
+ $('campaignKpis').innerHTML=[
+ ['Na fila',d.na_fila||0],['Enviados',d.enviados||0],['Responderam',d.responderam||0]
+ ].map(([a,b])=>`<div class="card kpi"><small>${a}</small><strong>${b}</strong></div>`).join('');
+ $('campaignNumbers').innerHTML=(d.placar||[]).map(n=>`<div class="listitem"><div><b>${esc(n.numero||n.nome)}</b><div class="muted">${n.funcao||''}</div></div><span>${n.enviadas||0} enviadas · ${n.responderam||0} respostas</span></div>`).join('')||'<div class="empty">Nenhum número configurado para a campanha.</div>';
+ if(document.activeElement!==$('campaignMessage'))$('campaignMessage').value=C.mensagem||'';
+ $('campaignContacts').innerHTML=`<table><thead><tr><th>Nome</th><th>Telefone</th><th>CPF</th><th>Status</th><th>Margem</th></tr></thead><tbody>${(d.contatos||[]).map(c=>`<tr><td>${esc(c.nome)}</td><td>${esc(c.telefone)}</td><td>${esc(c.cpf||'—')}</td><td>${esc(c.status)}</td><td>${brl(c.margem)}</td></tr>`).join('')}</tbody></table>`;
+}
+async function campaignAction(acao,extra={}){
+ campaignData=await api('/escritorio/campanha','POST',{acao,...extra});renderCampaign();return campaignData;
+}
+async function campaignImport(){
+ let text=$('campaignImport').value;
+ const file=$('campaignFile').files[0];
+ if(file)text=await file.text();
+ if(!text.trim())return alert('Cole ou selecione um CSV.');
+ const lines=text.trim().split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+ const parsed=lines.map(line=>{
+  const p=line.split(/[;,\t]/);
+  return {nome:p[0]||'',telefone:digits(p[1]||''),cpf:digits(p[2]||''),margem:p[3]||''}
+ }).filter(x=>x.telefone.length>=10);
+ if(!parsed.length)return alert('Não encontrei telefone válido na lista.');
+ await campaignAction('importar',{linhas:JSON.stringify(parsed)});
+}
+async function campaignSaveMessage(){
+ const mensagem=$('campaignMessage').value.trim();
+ if(mensagem.length<20)return alert('A mensagem precisa ter pelo menos 20 caracteres.');
+ await campaignAction('mensagem',{mensagem});
+}
+async function campaignToggle(){
+ await campaignAction(campaignData.config?.ativa?'pausar':'ativar');
 }
 
-async function saveCost(){
- const raw=$('costValue').value.replace(/\./g,'').replace(',','.');
- const value=Number(raw);
-
- if(!(value>0)){
-  alert('Informe um valor válido.');
-  return;
+/* =========================================================
+   DISPARO NORMAL
+========================================================= */
+async function massLoad(){
+ try{massData=await api('/escritorio/disparo','POST',{acao:'ver',id:selectedMass||''});renderMass()}
+ catch(e){$('massList').textContent=e.message}
+}
+function renderMass(){
+ const L=massData.disparos||[];
+ $('massList').innerHTML=L.map(d=>`<button class="btn" style="width:100%;text-align:left" onclick="selectMass(${Number(d.id)})"><b>${esc(d.nome)}</b><br><small>${esc(d.status)} · ${d.resumo?.enviadas||0}/${d.resumo?.total||0} enviados</small></button>`).join('')||'<div class="empty">Nenhum disparo cadastrado.</div>';
+ const d=L.find(x=>String(x.id)===String(selectedMass))||L[0];
+ if(d){
+  selectedMass=d.id;
+  $('massName').value=d.nome||'';
+  $('massNumbers').value=JSON.stringify(d.numeros||[]);
+  $('massInterval').value=d.intervalo_min||5;
+  $('massStart').value=d.hora_inicio||8;
+  $('massEnd').value=d.hora_fim||20;
+  $('massMessages').value=JSON.stringify(d.mensagens||[],null,2);
  }
-
+}
+async function selectMass(id){selectedMass=id;await massLoad()}
+async function massAction(acao){
+ const extra={};
+ if(['salvar'].includes(acao)){
+  try{
+   extra.nome=$('massName').value.trim();
+   extra.numeros=JSON.stringify(JSON.parse($('massNumbers').value||'[]'));
+   extra.intervalo_min=$('massInterval').value;
+   extra.hora_inicio=$('massStart').value;
+   extra.hora_fim=$('massEnd').value;
+   extra.mensagens=JSON.stringify(JSON.parse($('massMessages').value||'[]'));
+  }catch(e){return alert('Confira os campos JSON de números e mensagens.')}
+ }
+ if(!confirm(acao==='ativar'?'Iniciar este disparo?':acao==='pausar'?'Pausar o disparo?':acao==='criar'?'Criar novo disparo?':'Salvar alterações?'))return;
  try{
-  const d=await request('/escritorio/financeiro','POST',{
-   k:token,
-   acao:'salvar',
-   mes:new Date().toISOString().slice(0,7),
-   valor:value.toFixed(2),
-   data:$('costDate').value,
-   categoria:$('costCategory').value,
-   descricao:$('costDescription').value
-  });
-
-  if(d.erro)throw new Error(d.erro);
-
-  $('costValue').value='';
-  $('costDescription').value='';
-  await loadFinance();
-
- }catch(error){
-  alert(error.message);
- }
+  const d=await api('/escritorio/disparo','POST',{acao,id:selectedMass||'',...extra});
+  if(d.atual)selectedMass=d.atual;
+  $('massStatus').textContent=d.aviso||d.erro||'Ação processada.';
+  await massLoad();
+ }catch(e){$('massStatus').textContent=e.message}
 }
 
-async function deleteCost(id){
- if(!confirm('Apagar esta despesa?'))return;
-
+/* =========================================================
+   API OFICIAL
+========================================================= */
+async function officialLoad(){
+ try{officialData=await api('/escritorio/oficial','POST',{acao:'ver',id:selectedOfficial||''});renderOfficial()}
+ catch(e){$('officialConnection').textContent=e.message}
+}
+function renderOfficial(){
+ const d=officialData;
+ $('officialConnection').innerHTML=`<pre>${esc(JSON.stringify(d.conexao||d.templates||{},null,2))}</pre>`;
+ $('officialList').innerHTML=(d.disparos||[]).map(x=>`<button class="btn" style="width:100%;text-align:left" onclick="selectOfficial(${Number(x.id)})"><b>${esc(x.nome)}</b><br><small>${esc(x.status)} · ${x.resumo?.enviadas||0}/${x.resumo?.total||0}</small></button>`).join('')||'<div class="empty">Nenhum disparo oficial.</div>';
+ const x=(d.disparos||[]).find(y=>String(y.id)===String(selectedOfficial))||(d.disparos||[])[0];
+ if(x){
+  selectedOfficial=x.id;
+  $('officialName').value=x.nome||'';
+  $('officialTemplate').value=x.template||'';
+  $('officialLanguage').value=x.idioma||'pt_BR';
+  $('officialBody').value=JSON.stringify(x.corpo||[],null,2);
+  $('officialImage').value=x.cabecalho_imagem||'';
+  $('officialStart').value=x.hora_inicio||8;
+  $('officialEnd').value=x.hora_fim||20;
+ }
+}
+async function selectOfficial(id){selectedOfficial=id;await officialLoad()}
+async function officialAction(acao){
+ const extra={};
+ if(acao==='salvar'){
+  try{extra.nome=$('officialName').value;extra.template=$('officialTemplate').value;extra.idioma=$('officialLanguage').value;
+   extra.corpo=JSON.stringify(JSON.parse($('officialBody').value||'[]'));
+  }catch(e){return alert('JSON do corpo inválido.')}
+  extra.cabecalho_imagem=$('officialImage').value;
+  extra.hora_inicio=$('officialStart').value;extra.hora_fim=$('officialEnd').value;
+ }
+ if(['ativar','apagar'].includes(acao)&&!confirm('Confirma '+acao+' este disparo oficial?'))return;
  try{
-  await request('/escritorio/financeiro','POST',{
-   k:token,
-   acao:'apagar',
-   mes:new Date().toISOString().slice(0,7),
-   id
-  });
-
-  await loadFinance();
-
- }catch(error){
-  alert(error.message);
- }
+  const d=await api('/escritorio/oficial','POST',{acao,id:acao==='criar'?'':selectedOfficial||'',...extra});
+  if(d.atual)selectedOfficial=d.atual;
+  $('officialStatus').textContent=d.aviso||d.erro||'Ação processada.';
+  await officialLoad();
+ }catch(e){$('officialStatus').textContent=e.message}
 }
 
-/* CONFIGURAÇÕES */
-function saveConfig(){
- BASE=normalizeBase($('configServer').value);
-
- localStorage.setItem('gm_api',BASE);
- $('configServer').value=BASE;
-
- alert('URL salva. Faça um novo teste de conexão.');
+/* =========================================================
+   VENDAS E FUNIL
+========================================================= */
+function renderSales(){
+ const V=state.vendas_30d||state.vendas||[];
+ const contracts=state.contratos||[];
+ const paid=contracts.filter(c=>c.etapa==='pago');
+ const total=paid.reduce((s,c)=>s+Number(c.valor_liberado||0),0);
+ const com=paid.reduce((s,c)=>s+Number(c.comissao||0),0);
+ $('salesKpis').innerHTML=[['Pagos',paid.length],['Liberado',brl(total)],['Comissão',brl(com)]].map(([a,b])=>`<div class="card kpi"><small>${a}</small><strong>${b}</strong></div>`).join('');
+ const rows=Array.isArray(V)?V:[];
+ $('salesChart').innerHTML=rows.slice(-30).map(d=>{
+  const val=Number(d[salesMetric]||0),max=Math.max(1,...rows.map(x=>Number(x[salesMetric]||0)));
+  return `<div class="listitem"><span>${esc(d.dia||d.data||'')}</span><div style="width:55%"><div class="bar"><i style="width:${val/max*100}%"></i></div></div><b>${salesMetric==='pagos'?val:brl(val)}</b></div>`;
+ }).join('')||'<div class="empty">O resumo de vendas por dia não veio no estado atual.</div>';
+}
+function renderFunnel(){
+ const f=state.funil||{};
+ const stages=[['Entraram',f.entraram],['Mandaram CPF',f.enviaram_cpf],['Com margem',f.com_margem],['Escolheram oferta',f.escolheram],['Receberam proposta',f.receberam_proposta],['Assinaram',f.assinaram],['Pagos',f.pagos]];
+ const base=Number(f.entraram||0);
+ $('funnelRows').innerHTML=stages.map(([name,n])=>{
+  const v=Number(n||0);
+  return `<div class="listitem"><b>${name}</b><div style="width:55%"><div class="bar"><i style="width:${base?100*v/base:0}%"></i></div></div><strong>${v}</strong></div>`;
+ }).join('');
+ $('lossReasons').innerHTML=(f.motivos_perda||[]).map(x=>`<div class="listitem"><span>${esc(x.motivo)}</span><b>${x.total||0}</b></div>`).join('')||'<div class="empty">Sem motivos de perda disponíveis.</div>';
 }
 
-/* INICIALIZAÇÃO */
+/* =========================================================
+   AGENTES
+========================================================= */
+function renderAgents(){
+ const A=state.agentes_dados||[];
+ const agents=Array.isArray(A)?A:(A.agentes||[]);
+ $('agentKpis').innerHTML=[
+  ['Agentes',agents.length],
+  ['Período',agentDays+' dias'],
+  ['Clientes atendidos',agents.reduce((s,a)=>s+Number(a.atendidos||a.total||0),0)]
+ ].map(([a,b])=>`<div class="card kpi"><small>${a}</small><strong>${b}</strong></div>`).join('');
+ $('agentCards').innerHTML=agents.map(a=>`<div class="card">
+  <h3>${esc(a.nome||a.setor||'Agente')}</h3>
+  <span class="tag">${esc(a.versao||'Versão')}</span>
+  <p class="muted">Setor: ${esc(a.setor||'—')}</p>
+  <div class="listitem"><span>Atendidos</span><b>${a.atendidos??a.total??0}</b></div>
+  <div class="listitem"><span>Avançaram</span><b>${a.avancaram??0}</b></div>
+  <div class="listitem"><span>Perderam</span><b>${a.perderam??0}</b></div>
+  <div class="listitem"><span>Esperando</span><b>${a.esperando??0}</b></div>
+ </div>`).join('')||'<div class="card muted">Dados comparativos dos agentes não disponíveis no retorno do estado.</div>';
+}
+
+/* =========================================================
+   NÚMEROS E MATURADOR
+========================================================= */
+async function numberAction(acao,extra={}){
+ const d=await api('/escritorio/numeros','POST',{acao,...extra});
+ numberData=d;renderNumbers();return d;
+}
+async function numberLoad(){
+ try{await numberAction('ver')}
+ catch(e){$('numberList').textContent=e.message;$('maturatorConfig').textContent=e.message}
+}
+function renderNumbers(){
+ const L=numberData.numeros||[];
+ $('numberList').innerHTML=L.map(n=>`<div class="listitem">
+ <div><b>${esc(n.apelido||n.telefone||'Número '+n.id)}</b><div class="muted">${esc(n.telefone||'')}</div></div>
+ <div class="row"><span class="tag ${n.status_conexao==='conectado'?'ok':'bad'}">${esc(n.status_conexao||'—')}</span><span>${n.leads_ativos||0} clientes</span>
+ <button class="btn small" onclick="numberCommand('teste',${Number(n.id)})">Testar</button>
+ <button class="btn small danger" onclick="numberCommand('excluir',${Number(n.id)})">Excluir</button></div></div>`).join('')||'<div class="empty">Nenhum número cadastrado.</div>';
+ $('maturatorConfig').innerHTML=`<pre>${esc(JSON.stringify(numberData.maturador||numberData.config||{},null,2))}</pre>`;
+ $('maturatorHistory').innerHTML=(numberData.mensagens||numberData.ultimas||[]).map(x=>`<div class="listitem">${esc(x.texto||x.mensagem||'')} <small>${dateBR(x.criado_em)}</small></div>`).join('')||'<div class="empty">Histórico não retornado.</div>';
+}
+async function numberCommand(acao,id){
+ if(!confirm('Confirma '+acao+' neste número?'))return;
+ try{
+  const d=await numberAction(acao,{id});
+  if(d.qr||d.qrcode){
+   showModal('Conectar WhatsApp',`<div class="empty">Leia o QR Code no WhatsApp.</div><img style="max-width:100%" src="${esc(d.qr||d.qrcode)}">`);
+  }
+ }catch(e){alert(e.message)}
+}
+async function numberNew(){
+ const aparelho=prompt('Onde ficará esse chip? (ex.: Motorola · slot 4)');
+ if(aparelho===null)return;
+ try{
+  const d=await numberAction('criar',{aparelho});
+  if(d.criado)showModal('Novo número',`<pre>${esc(JSON.stringify(d,null,2))}</pre>`);
+ }catch(e){alert(e.message)}
+}
+
+/* =========================================================
+   INDICAÇÕES
+========================================================= */
+async function referralLoad(){
+ try{referralData=await api('/escritorio/indicacoes','POST',{acao:'ver'});renderReferrals()}
+ catch(e){$('referralPeople').textContent=e.message}
+}
+function renderReferrals(){
+ const d=referralData;
+ $('referralKpis').innerHTML=[
+ ['Indicadores',(d.indicadores||[]).length],['Indicações',(d.indicacoes||[]).length],['A pagar',brl(d.total_pagar)]
+ ].map(([a,b])=>`<div class="card kpi"><small>${a}</small><strong>${b}</strong></div>`).join('');
+ $('referralPay').innerHTML=(d.pagar||[]).map(x=>`<div class="listitem">${esc(x.nome)} · ${brl(x.valor)} <button class="btn small" onclick="referralCommand('pagar',${Number(x.id)})">Marcar pago</button></div>`).join('')||'<div class="empty">Nada pendente.</div>';
+ $('referralPeople').innerHTML=(d.indicadores||[]).map(x=>`<div class="listitem"><div><b>${esc(x.nome)}</b><div class="muted">${esc(x.cpf||'')} · PIX ${esc(x.pix||'')}</div></div><span>${x.total_indicacoes||0} indicações</span></div>`).join('')||'<div class="empty">Nenhum indicador.</div>';
+ $('referralLeads').innerHTML=(d.indicacoes||[]).map(x=>`<div class="listitem">${esc(x.nome||x.cliente||'Cliente')} · ${esc(x.status||'')} · ${brl(x.comissao)}</div>`).join('')||'<div class="empty">Nenhuma indicação.</div>';
+}
+async function newReferrer(){
+ const nome=prompt('Nome completo:');if(!nome)return;
+ const cpf=prompt('CPF:');if(!cpf)return;
+ const pix=prompt('Chave PIX:');if(!pix)return;
+ const telefone=prompt('Telefone (opcional):')||'';
+ try{referralData=await api('/escritorio/indicacoes','POST',{acao:'cadastrar',nome,cpf:digits(cpf),pix,telefone});renderReferrals()}
+ catch(e){alert(e.message)}
+}
+async function referralCommand(acao,id){
+ try{referralData=await api('/escritorio/indicacoes','POST',{acao,id});renderReferrals()}
+ catch(e){alert(e.message)}
+}
+
+/* =========================================================
+   FINANCEIRO
+========================================================= */
+async function financeLoad(acao='ver',extra={}){
+ try{
+  financeData=await api('/escritorio/financeiro','POST',{acao,mes:financeMonth,...extra});
+  renderFinance();
+  return financeData;
+ }catch(e){$('financeError').textContent=e.message;return null}
+}
+function renderFinance(){
+ const d=financeData||{},rec=Number(d.receita||0),gas=Number(d.total_gastos||0);
+ $('finMonth').textContent=d.mes||financeMonth;
+ $('financeKpis').innerHTML=[
+ ['Comissão recebida',brl(rec)],['Gastos',brl(gas)],['Lucro / prejuízo',brl(rec-gas)],['Contratos pagos',d.contratos_pagos||0]
+ ].map(([a,b])=>`<div class="card kpi"><small>${a}</small><strong>${b}</strong></div>`).join('');
+ const cats=d.por_categoria||{};
+ $('financeCategories').innerHTML=Object.entries(cats).map(([k,v])=>`<div class="listitem"><span>${esc(k)}</span><b>${brl(v)}</b></div>`).join('')||'<div class="empty">Sem gastos por categoria.</div>';
+ const O=d.origens||{};
+ $('costChannels').innerHTML=[
+  ['Disparos',O.disparo],['Tráfego',O.trafego],['Outros',null]
+ ].map(([k,v])=>`<div class="card"><h3>${k}</h3><strong>${v?brl(v.gasto):'—'}</strong><p class="muted">${v?(v.leads||0)+' leads · '+(v.pagos||0)+' pagos':'Sem atribuição disponível'}</p></div>`).join('');
+ $('expenseList').innerHTML=(d.gastos||[]).map(g=>`<div class="listitem"><div><b>${dateBR(g.data)}</b> · ${esc(g.categoria)}<div class="muted">${esc(g.descricao||'')} ${g.quantidade?'· '+g.quantidade+' disparos':''}</div></div><div class="row"><b>${brl(g.valor)}</b><button class="btn small danger" onclick="deleteExpense(${Number(g.id)})">Apagar</button></div></div>`).join('')||'<div class="empty">Nenhum gasto lançado neste mês.</div>';
+}
+async function saveExpense(ev){
+ ev.preventDefault();
+ let v=$('expenseValue').value.replace(/[^\d,.-]/g,'');
+ if(v.includes(','))v=v.replace(/\./g,'').replace(',','.');
+ const valor=Number(v);
+ if(!(valor>0))return $('financeError').textContent='Valor inválido.';
+ const d=await financeLoad('salvar',{
+  valor:valor.toFixed(2),data:$('expenseDate').value,
+  categoria:$('expenseCategory').value,descricao:$('expenseDescription').value,
+  quantidade:$('expenseQty').value
+ });
+ if(d){$('expenseValue').value='';$('expenseDescription').value='';$('expenseQty').value=''}
+}
+async function deleteExpense(id){
+ if(!confirm('Apagar este gasto?'))return;
+ await financeLoad('apagar',{id:String(id)});
+}
+function changeFinMonth(n){
+ const [y,m]=financeMonth.split('-').map(Number),d=new Date(y,m-1+n,1);
+ if(d>new Date())return;
+ financeMonth=d.toISOString().slice(0,7);financeLoad();
+}
+
+/* =========================================================
+   SIMULADOR
+========================================================= */
+function calculateProjection(){
+ const clientes=Number($('simClients').value),conv=Number($('simConversion').value)/100;
+ const valor=Number($('simValue').value),com=Number($('simCommission').value)/100;
+ const dias=Number($('simDays').value),contratos=clientes*conv*dias;
+ const liberado=contratos*valor,comissao=liberado*com;
+ $('simResult').innerHTML=`<div class="grid3">
+ <div class="card kpi"><small>Contratos estimados</small><strong>${Math.round(contratos)}</strong></div>
+ <div class="card kpi"><small>Produção liberada</small><strong class="gold">${brl(liberado)}</strong></div>
+ <div class="card kpi"><small>Comissão estimada</small><strong class="green">${brl(comissao)}</strong></div></div>`;
+}
+function useRealNumbers(){
+ const f=state.funil||{},s=state.resumo_v2?.d30?.numeros||{};
+ const base=Number(f.entraram||0);
+ if(!base)return alert('Ainda não há volume suficiente no funil.');
+ $('simClients').value=Math.max(1,Math.round(base/30));
+ $('simConversion').value=Math.round(Number(f.pagos||0)/base*1000)/10;
+ $('simValue').value=Math.round(Number(s.liberado||0)/Math.max(1,Number(s.pagos||1)));
+}
+
+/* =========================================================
+   CHAT TESTE
+========================================================= */
+function newTestClient(){
+ testPhone='teste-'+Date.now().toString(36);
+ localStorage.setItem('gm_test_phone',testPhone);
+ testAfter=0;testHistory=[];$('testClient').textContent=testPhone;
+ $('testMessages').innerHTML='';$('testStatus').textContent='Novo cliente';
+}
+async function sendTestMessage(){
+ const mensagem=$('testText').value.trim();if(!mensagem)return;
+ if(!testPhone)newTestClient();
+ try{
+  const d=await fetch(BASE+'/gmcred/chat',{method:'POST',body:new URLSearchParams({
+   k:TOKEN,telefone:testPhone,mensagem,enviado_em:new Date().toISOString()
+  })}).then(async r=>{const j=await r.json();if(!r.ok)throw Error(j.erro||r.status);return j});
+  $('testText').value='';
+  if(d.mensagens)(d.mensagens||[]).forEach(m=>testHistory.push({txt:m.texto||m,mine:false}));
+  $('testStatus').textContent=d.humano?'Atendimento humano':'Agente respondeu';
+  renderTestMessages();
+  pollTestMessages();
+ }catch(e){alert(e.message)}
+}
+function renderTestMessages(){
+ $('testMessages').innerHTML=testHistory.map(m=>`<div class="bubble ${m.mine?'out':''}">${esc(m.txt)}</div>`).join('');
+ $('testMessages').scrollTop=$('testMessages').scrollHeight;
+}
+async function pollTestMessages(){
+ if(!testPhone)return;
+ try{
+  const d=await fetch(BASE+'/gmcred/chat/novas',{method:'POST',body:new URLSearchParams({k:TOKEN,telefone:testPhone,depois:String(testAfter)})}).then(r=>r.json());
+  (d.mensagens||[]).forEach(m=>{testHistory.push({txt:m.texto||m.txt||'',mine:m.direcao==='saida'});testAfter=Math.max(testAfter,Number(m.id||0))});
+  renderTestMessages();
+ }catch(e){}
+}
+function startTestPoll(){clearInterval(testPoll);if(!testPhone)newTestClient();testPoll=setInterval(pollTestMessages,5000)}
+async function testEvent(evento){
+ try{await fetch(BASE+'/gmcred/chat/evento',{method:'POST',body:new URLSearchParams({k:TOKEN,telefone:testPhone,evento})});alert('Evento enviado.')}
+ catch(e){alert(e.message)}
+}
+async function clearTests(){
+ if(!confirm('Apagar os clientes de teste?'))return;
+ try{await fetch(BASE+'/gmcred/chat/limpar',{method:'POST',body:new URLSearchParams({k:TOKEN})});testHistory=[];renderTestMessages();alert('Solicitação enviada.')}
+ catch(e){alert(e.message)}
+}
+
+/* =========================================================
+   INICIALIZAÇÃO
+========================================================= */
 $('server').value=BASE;
-
-if(token){
- $('login').classList.add('hidden');
- $('app').classList.remove('hidden');
- $('configServer').value=BASE;
- refresh();
+$('configBase').value=BASE;
+if(TOKEN){
+ $('login').classList.add('hidden');$('app').classList.remove('hidden');
+ $('configBase').value=BASE;refresh();
 }
+setInterval(()=>{if(TOKEN&&!document.hidden)refresh()},30000);
 </script>
-
 </body>
 </html>
