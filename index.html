@@ -1,158 +1,212 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>GM Cred · Escritório</title>
-  <meta name="theme-color" content="#ffffff" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
-  <script>
-    try {
-      if (localStorage.getItem('gmcred_tema') === 'escuro') {
-        document.documentElement.dataset.tema = 'escuro';
-      }
-    } catch (e) {}
-  </script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chat Gemini</title>
+<style>
+:root{
+  --bg:#eef2f6; --panel:#ffffff; --ink:#14202b; --muted:#5d6b79; --line:#d5dde6;
+  --accent:#2d4ee0; --accent-ink:#ffffff; --me:#2d4ee0; --me-ink:#ffffff; --bot:#ffffff;
+  --code:#e6ebf1; --err:#b3261e;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1720; --panel:#17212c; --ink:#e7edf3; --muted:#92a1b0; --line:#2a3745;
+    --accent:#7c93ff; --accent-ink:#0f1720; --me:#3a55e6; --me-ink:#ffffff; --bot:#17212c;
+    --code:#0f1720; --err:#ff8a80; color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 "Segoe UI",system-ui,-apple-system,sans-serif;display:flex;flex-direction:column}
+header{display:flex;gap:.75rem;align-items:center;padding:.75rem 1rem;background:var(--panel);border-bottom:1px solid var(--line)}
+header h1{font-size:1.05rem;margin:0;font-weight:650;letter-spacing:-.01em;flex:1}
+button,input,textarea{font:inherit;color:inherit}
+.btn{border:1px solid var(--line);background:transparent;border-radius:8px;padding:.45rem .8rem;cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
+.btn:disabled{opacity:.5;cursor:default}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#settings{display:none;padding:1rem;background:var(--panel);border-bottom:1px solid var(--line)}
+#settings.open{display:grid;gap:.75rem;max-width:760px;width:100%;margin:0 auto;border:0}
+#settings label{display:grid;gap:.25rem;font-size:.9rem;color:var(--muted)}
+#settings input,#settings textarea{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:.5rem .65rem;color:var(--ink);width:100%}
+#settings textarea{min-height:4.5rem;resize:vertical}
+.row{display:flex;gap:.5rem;flex-wrap:wrap}
+.hint{font-size:.82rem;color:var(--muted);margin:0}
+main{flex:1;overflow-y:auto;padding:1rem}
+#log{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:.75rem}
+.empty{margin:18vh auto 0;text-align:center;color:var(--muted);max-width:30ch}
+.msg{max-width:88%;padding:.65rem .9rem;border-radius:14px;overflow-wrap:anywhere}
+.msg.me{align-self:flex-end;background:var(--me);color:var(--me-ink);border-bottom-right-radius:4px}
+.msg.bot{align-self:flex-start;background:var(--bot);border:1px solid var(--line);border-bottom-left-radius:4px}
+.msg.err{align-self:center;color:var(--err);border:1px solid var(--err);background:transparent;font-size:.92rem}
+.msg pre{background:var(--code);padding:.65rem;border-radius:8px;overflow-x:auto;margin:.5rem 0}
+.msg code{font-family:ui-monospace,Consolas,monospace;font-size:.9em;background:var(--code);padding:.1em .3em;border-radius:4px}
+.msg pre code{padding:0;background:none}
+.typing{color:var(--muted)}
+footer{padding:.75rem 1rem;background:var(--panel);border-top:1px solid var(--line)}
+#composer{max-width:760px;margin:0 auto;display:flex;gap:.5rem;align-items:flex-end}
+#input{flex:1;resize:none;max-height:9rem;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:.6rem .75rem}
+@media (prefers-reduced-motion:no-preference){.typing{animation:pulse 1.2s ease-in-out infinite}@keyframes pulse{50%{opacity:.4}}}
+</style>
 </head>
 <body>
-  <!-- LOGIN -->
-  <div class="login-veu" id="login">
-    <div class="login-box">
-      <div class="logo-lg">GM</div>
-      <h1>GM Cred · Escritório</h1>
-      <p>Digite a chave de acesso para ver os dados reais</p>
-      <input type="password" id="chaveIn" placeholder="Chave de acesso" autocomplete="current-password" />
-      <div class="chave-err" id="chaveErr"></div>
-      <button class="btn-pri" id="btnEntrar">Entrar</button>
-      <button class="btn-sec" id="btnDemo">Ver demonstração</button>
-    </div>
+<header>
+  <h1>Chat Gemini</h1>
+  <button class="btn" id="toggle" aria-expanded="false" aria-controls="settings">Configurações</button>
+  <button class="btn" id="clear">Nova conversa</button>
+</header>
+
+<section id="settings" aria-label="Configurações">
+  <label>Chave de API (fica salva só neste navegador)
+    <input id="key" type="password" autocomplete="off" placeholder="Cole aqui a chave do Google AI Studio">
+  </label>
+  <label>Modelo
+    <input id="model" list="models" autocomplete="off">
+    <datalist id="models">
+      <option value="gemini-3.5-flash-lite">
+      <option value="gemini-2.5-flash-lite">
+      <option value="gemini-3.6-flash">
+      <option value="gemini-3.8-flash">
+      <option value="gemini-3.5-flash">
+    </datalist>
+  </label>
+  <label>Instruções para o modelo (opcional)
+    <textarea id="system" placeholder="Ex.: Responda sempre em português, de forma curta e educada."></textarea>
+  </label>
+  <p class="hint">No plano gratuito, os limites variam por modelo. Se aparecer erro de limite, espere um pouco ou troque o modelo.</p>
+</section>
+
+<main id="scroll"><div id="log"><p class="empty" id="empty">Escreva uma mensagem para começar a conversa.</p></div></main>
+
+<footer>
+  <div id="composer">
+    <textarea id="input" rows="1" placeholder="Digite sua mensagem" aria-label="Mensagem"></textarea>
+    <button class="btn primary" id="send">Enviar</button>
   </div>
+</footer>
 
-  <!-- TOPO -->
-  <header class="top">
-    <div class="marca">
-      <div class="logo">GM</div>
-      <div>
-        <h1 id="pgTit">Escritório</h1>
-        <p id="pgSub">GM Cred · Painel</p>
-      </div>
-    </div>
+<script>
+const $ = s => document.querySelector(s);
+const store = {
+  get(k, d = "") { try { return localStorage.getItem(k) ?? d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch {} }
+};
+let history = [];
+let busy = false;
 
-    <div class="kpis">
-      <div class="kpi"><b id="kAnd">—</b><span>Em andamento</span></div>
-      <div class="kpi"><b id="kPag">—</b><span>Pagos hoje</span></div>
-      <div class="kpi"><b id="kPar">—</b><span>Parados</span></div>
-    </div>
+const keyEl = $("#key"), modelEl = $("#model"), sysEl = $("#system");
+keyEl.value = store.get("gk");
+modelEl.value = store.get("gm", "gemini-3.5-flash-lite");
+sysEl.value = store.get("gs");
+keyEl.oninput = () => store.set("gk", keyEl.value.trim());
+modelEl.oninput = () => store.set("gm", modelEl.value.trim());
+sysEl.oninput = () => store.set("gs", sysEl.value);
+if (!keyEl.value) setSettings(true);
 
-    <div class="upd" id="upd"></div>
+function setSettings(open) {
+  $("#settings").classList.toggle("open", open);
+  $("#toggle").setAttribute("aria-expanded", open);
+}
+$("#toggle").onclick = () => setSettings(!$("#settings").classList.contains("open"));
 
-    <button class="conn off" id="connBtn">
-      <i></i>
-      <span id="connTxt">Offline</span>
-    </button>
-  </header>
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const inline = s => s
+  .replace(/`([^`\n]+)`/g, "<code>$1</code>")
+  .replace(/\*\*([^*\n]+)\*\*/g, "<strong>$1</strong>")
+  .replace(/\n/g, "<br>");
+const md = t => t.split("```").map((p, i) =>
+  i % 2 ? "<pre><code>" + esc(p.replace(/^[\w-]*\n/, "")) + "</code></pre>" : inline(esc(p))
+).join("");
 
-  <div class="aviso" id="aviso" style="display:none"></div>
+function addMsg(kind, html) {
+  $("#empty")?.remove();
+  const el = document.createElement("div");
+  el.className = "msg " + kind;
+  el.innerHTML = html;
+  $("#log").appendChild(el);
+  scrollDown();
+  return el;
+}
+const scrollDown = () => { const s = $("#scroll"); s.scrollTop = s.scrollHeight; };
 
-  <div class="layout">
-    <aside class="sidebar">
-      <nav class="nav" id="nav">
-        <button class="nv ativo" data-view="escritorio"><span class="ico">🏢</span><span class="lb">Escritório</span></button>
-        <button class="nv" data-view="clientes"><span class="ico">👥</span><span class="lb">Clientes</span><span class="badge" id="navBadge" hidden>0</span></button>
-        <button class="nv" data-view="agentes"><span class="ico">🤖</span><span class="lb">Agentes</span></button>
-        <button class="nv" data-view="conversas"><span class="ico">💬</span><span class="lb">Conversas</span></button>
-        <button class="nv" data-view="financeiro"><span class="ico">💰</span><span class="lb">Financeiro</span></button>
-        <button class="nv" data-view="numeros"><span class="ico">📱</span><span class="lb">Números</span></button>
-      </nav>
-      <div class="sb-fim">
-        <button class="nv" id="btnTema"><span class="ico">🌓</span><span class="lb">Tema</span></button>
-        <button class="nv" id="btnTeste"><span class="ico">🧪</span><span class="lb">Testes</span></button>
-        <button class="nv" id="btnSair"><span class="ico">🚪</span><span class="lb">Sair</span></button>
-      </div>
-    </aside>
+function explain(status, msg) {
+  if (status === 429) return "Limite do plano gratuito atingido. Espere um pouco ou troque o modelo em Configurações.";
+  if (status === 404) return "Modelo não encontrado. Troque o modelo em Configurações. (" + msg + ")";
+  if (status === 400 || status === 403) return "A API recusou o pedido. Confira a chave e o modelo. (" + msg + ")";
+  return "Erro " + status + ": " + msg;
+}
 
-    <main class="content">
-      <!-- ESCRITÓRIO -->
-      <div class="view ativo" id="v-escritorio">
-        <section class="atencao" id="atencao" hidden>
-          <h3>⚠️ Precisa da sua atenção</h3>
-          <div id="listaAtencao"></div>
-        </section>
+async function send() {
+  const text = $("#input").value.trim();
+  if (!text || busy) return;
+  const key = keyEl.value.trim(), model = modelEl.value.trim();
+  if (!key || !model) { setSettings(true); addMsg("err", "Preencha a chave de API e o modelo em Configurações."); return; }
 
-        <section class="escritorio">
-          <div class="salas" id="salas"></div>
-        </section>
+  busy = true; $("#send").disabled = true;
+  $("#input").value = ""; autosize();
+  addMsg("me", esc(text).replace(/\n/g, "<br>"));
+  history.push({ role: "user", parts: [{ text }] });
+  const bot = addMsg("bot", '<span class="typing">Pensando…</span>');
 
-        <section class="clientes-rapido">
-          <div class="sec-topo">
-            <h3>Clientes no escritório</h3>
-            <div class="chips" id="filtroSalas"></div>
-          </div>
-          <div class="lista-clientes" id="listaClientes"></div>
-        </section>
-      </div>
+  const body = { contents: history };
+  if (sysEl.value.trim()) body.systemInstruction = { parts: [{ text: sysEl.value.trim() }] };
 
-      <!-- CLIENTES -->
-      <div class="view" id="v-clientes" hidden>
-        <div class="fbox">
-          <div class="crm-topo">
-            <h2>Clientes</h2>
-            <input type="search" id="crmBusca" placeholder="Buscar nome, CPF ou telefone..." />
-          </div>
-          <div class="chips" id="crmChips"></div>
-          <div id="crmLista" class="crm-lista"></div>
-        </div>
-      </div>
+  let answer = "";
+  try {
+    const url = "https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(model) + ":streamGenerateContent?alt=sse";
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-goog-api-key": key },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) {
+      let m = res.statusText;
+      try { m = (await res.json()).error?.message || m; } catch {}
+      throw { status: res.status, message: m };
+    }
+    const reader = res.body.getReader(), dec = new TextDecoder();
+    let buf = "";
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, { stream: true });
+      const lines = buf.split("\n"); buf = lines.pop();
+      for (const line of lines) {
+        if (!line.startsWith("data:")) continue;
+        try {
+          const parts = JSON.parse(line.slice(5)).candidates?.[0]?.content?.parts || [];
+          for (const p of parts) if (p.text && !p.thought) answer += p.text;
+          bot.innerHTML = md(answer) || '<span class="typing">Pensando…</span>';
+          scrollDown();
+        } catch {}
+      }
+    }
+    if (!answer) throw { status: 0, message: "O modelo não devolveu texto. Tente reformular a mensagem." };
+    history.push({ role: "model", parts: [{ text: answer }] });
+  } catch (e) {
+    history.pop();
+    bot.remove();
+    if (answer) addMsg("bot", md(answer));
+    addMsg("err", e.status !== undefined ? explain(e.status, e.message) : "Falha de conexão. Verifique a internet e tente de novo.");
+  } finally {
+    busy = false; $("#send").disabled = false; $("#input").focus();
+  }
+}
 
-      <!-- AGENTES -->
-      <div class="view" id="v-agentes" hidden>
-        <div class="fbox">
-          <h2>Agentes</h2>
-          <div class="ag-resumo" id="agResumo"></div>
-          <div class="ag-cards" id="agSetores"></div>
-        </div>
-      </div>
-
-      <!-- CONVERSAS / EVENTOS -->
-      <div class="view" id="v-conversas" hidden>
-        <div class="fbox">
-          <h2>Últimos eventos</h2>
-          <div id="listaConversas" class="lista-conversas"></div>
-        </div>
-      </div>
-
-      <!-- FINANCEIRO -->
-      <div class="view" id="v-financeiro" hidden>
-        <div class="fbox">
-          <h2>Financeiro</h2>
-          <div class="fin-kpis" id="finKpis"></div>
-          <div id="finTabela" class="tabela-wrap"></div>
-        </div>
-      </div>
-
-      <!-- NÚMEROS -->
-      <div class="view" id="v-numeros" hidden>
-        <div class="fbox">
-          <h2>Números WhatsApp</h2>
-          <div id="numerosLista" class="numeros-grid"></div>
-        </div>
-      </div>
-    </main>
-  </div>
-
-  <!-- Modal -->
-  <div class="modal-veu" id="modal" hidden>
-    <div class="modal">
-      <header>
-        <h3 id="modalTitulo">Detalhe</h3>
-        <button class="fechar" id="modalFechar">✕</button>
-      </header>
-      <div class="modal-body" id="modalBody"></div>
-    </div>
-  </div>
-
-  <script src="app.js"></script>
+function autosize() {
+  const t = $("#input"); t.style.height = "auto"; t.style.height = Math.min(t.scrollHeight, 144) + "px";
+}
+$("#input").oninput = autosize;
+$("#input").onkeydown = e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } };
+$("#send").onclick = send;
+$("#clear").onclick = () => {
+  history = [];
+  $("#log").innerHTML = '<p class="empty" id="empty">Escreva uma mensagem para começar a conversa.</p>';
+};
+</script>
 </body>
 </html>
