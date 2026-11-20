@@ -1,355 +1,158 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GM CRED | Gestão Inteligente</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-:root{
- --bg:#f5f6f8;--white:#fff;--text:#20242c;--muted:#89909c;
- --line:#eaecf0;--gold:#c9a23b;--gold-light:#fbf5e7;
- --green:#159b69;--red:#df5555;--blue:#4778d5;
- --shadow:0 3px 15px rgba(20,30,50,.045);
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);font-family:Inter,sans-serif;color:var(--text)}
-button,input,select{font:inherit}
-button{cursor:pointer}
-.app{display:flex;min-height:100vh}
-.sidebar{width:245px;background:#fff;border-right:1px solid var(--line);padding:25px 16px;position:fixed;inset:0 auto 0 0;overflow-y:auto;z-index:5}
-.brand{padding:0 12px 28px}
-.brand strong{font-size:23px;color:var(--gold);font-weight:800;letter-spacing:.5px}
-.brand small{display:block;font-size:9px;letter-spacing:3px;color:#888;font-weight:800;margin-top:4px}
-.group{font-size:10px;font-weight:800;color:#a1a6af;letter-spacing:1.3px;padding:15px 12px 8px}
-.nav{width:100%;display:flex;align-items:center;gap:12px;padding:11px 13px;border:0;background:transparent;color:#626b78;border-radius:9px;text-align:left;font-size:13px;font-weight:600;margin:2px 0}
-.nav:hover{background:#f7f7f8}
-.nav.active{background:var(--gold-light);color:#98751d}
-.nav .ico{width:19px;text-align:center;font-size:16px}
-.main{margin-left:245px;width:calc(100% - 245px);padding:28px 34px 50px}
-.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:15px}
-.crumb{font-size:12px;color:var(--muted)}
-.crumb b{color:#333}
-.topright{display:flex;align-items:center;gap:12px}
-.status{font-size:11px;background:#fff;border:1px solid var(--line);padding:8px 12px;border-radius:20px;color:#777}
-.status i{display:inline-block;width:7px;height:7px;background:#d5a83e;border-radius:50%;margin-right:6px}
-.avatar{width:35px;height:35px;border-radius:50%;display:grid;place-items:center;background:#f4ead0;color:#98751d;font-weight:800}
-.page{display:none}
-.page.active{display:block}
-.heading{display:flex;justify-content:space-between;align-items:flex-end;gap:15px;margin-bottom:23px}
-.heading h1{font-size:25px;margin:0 0 7px;font-weight:750;letter-spacing:-.7px}
-.heading p{font-size:13px;color:var(--muted);margin:0}
-.filters{display:flex;gap:8px;align-items:center}
-select,.outline{border:1px solid var(--line);background:white;border-radius:8px;padding:9px 12px;color:#555;font-size:12px}
-.btn{border:0;background:var(--gold);color:#171717;padding:10px 15px;border-radius:8px;font-size:12px;font-weight:800}
-.grid{display:grid;gap:15px}
-.kpis{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:17px}
-.card{background:#fff;border:1px solid var(--line);border-radius:13px;padding:18px;box-shadow:var(--shadow);min-width:0}
-.kpi-label{font-size:11px;color:var(--muted);font-weight:600}
-.kpi-value{font-size:25px;font-weight:800;margin:12px 0 8px;letter-spacing:-.8px}
-.kpi-foot{font-size:11px;color:var(--muted)}
-.positive{color:var(--green)}.negative{color:var(--red)}
-.kpi-icon{float:right;width:34px;height:34px;border-radius:9px;background:var(--gold-light);display:grid;place-items:center;color:#a17d22}
-.charts{grid-template-columns:1.7fr 1fr;margin-bottom:16px}
-.card-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:17px}
-.card-title h3{font-size:13px;margin:0;font-weight:750}
-.card-title span{font-size:11px;color:var(--muted)}
-.chart-wrap{height:260px;position:relative}
-.bottom-grid{grid-template-columns:1.2fr 1fr}
-.table{width:100%;border-collapse:collapse;font-size:12px}
-.table th{text-align:left;color:#9aa0aa;font-size:10px;text-transform:uppercase;letter-spacing:.6px;padding:10px 8px;border-bottom:1px solid var(--line)}
-.table td{padding:13px 8px;border-bottom:1px solid #f1f2f4}
-.table tr:last-child td{border:0}
-.pill{padding:5px 8px;border-radius:20px;font-size:10px;font-weight:700;background:#f1f3f5;color:#666}
-.pill.green{background:#e7f7ef;color:#128557}
-.pill.yellow{background:#fff5dc;color:#a27a18}
-.pill.red{background:#ffeded;color:#c54c4c}
-.progress{height:7px;background:#f0f1f3;border-radius:10px;overflow:hidden;margin-top:8px}
-.progress i{display:block;height:100%;background:var(--gold);border-radius:10px}
-.section-title{font-size:14px;font-weight:750;margin:0 0 15px}
-.metric-list{display:grid;gap:15px}
-.metric-row{display:grid;grid-template-columns:110px 1fr 45px;align-items:center;gap:10px;font-size:11px}
-.metric-row .bar{height:8px;background:#f0f1f3;border-radius:10px;overflow:hidden}
-.metric-row .bar i{display:block;height:100%;background:var(--gold);border-radius:10px}
-.metric-row b{text-align:right}
-.content-card{background:#fff;border:1px solid var(--line);border-radius:13px;padding:20px;margin-bottom:15px;box-shadow:var(--shadow)}
-.content-card h3{font-size:14px;margin:0 0 6px}
-.content-card p{font-size:12px;color:var(--muted);line-height:1.6}
-.cards-3{grid-template-columns:repeat(3,1fr)}
-.module{display:flex;align-items:center;gap:12px;padding:15px;border:1px solid var(--line);border-radius:10px;background:#fff}
-.module .mi{width:37px;height:37px;border-radius:10px;background:var(--gold-light);display:grid;place-items:center}
-.module b{font-size:12px;display:block}.module small{font-size:10px;color:var(--muted)}
-.demo{background:#fff8e9;border:1px solid #f0dfb6;color:#86651b;padding:11px 14px;border-radius:9px;font-size:11px;margin-bottom:18px}
-@media(max-width:1050px){.kpis{grid-template-columns:repeat(2,1fr)}.charts,.bottom-grid{grid-template-columns:1fr}}
-@media(max-width:700px){
- .sidebar{width:65px;padding:15px 7px}.brand{padding:8px 4px 20px}.brand strong{font-size:13px}.brand small,.group,.nav span:not(.ico){display:none}
- .nav{justify-content:center;padding:12px 5px}.nav .ico{font-size:18px}
- .main{margin-left:65px;width:calc(100% - 65px);padding:20px 13px}
- .heading{align-items:flex-start;flex-direction:column}.heading h1{font-size:21px}
- .topbar{margin-bottom:20px}.kpi-value{font-size:20px}
- .card{padding:13px}.chart-wrap{height:220px}
- .cards-3{grid-template-columns:1fr}
- .table{min-width:520px}.table-scroll{overflow-x:auto}
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>GM Cred · Escritório</title>
+  <meta name="theme-color" content="#ffffff" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script>
+    try {
+      if (localStorage.getItem('gmcred_tema') === 'escuro') {
+        document.documentElement.dataset.tema = 'escuro';
+      }
+    } catch (e) {}
+  </script>
 </head>
 <body>
-<div class="app">
-<aside class="sidebar">
- <div class="brand"><strong>GM CRED</strong><small>GESTÃO INTELIGENTE</small></div>
-
- <div class="group">GESTÃO</div>
- <button class="nav active" data-page="dashboard"><span class="ico">▦</span><span>Visão geral</span></button>
- <button class="nav" data-page="financeiro"><span class="ico">◈</span><span>Financeiro</span></button>
- <button class="nav" data-page="metas"><span class="ico">◎</span><span>Metas e comissões</span></button>
-
- <div class="group">COMERCIAL</div>
- <button class="nav" data-page="leads"><span class="ico">♙</span><span>Leads e clientes</span></button>
- <button class="nav" data-page="funil"><span class="ico">▽</span><span>Funil de vendas</span></button>
- <button class="nav" data-page="propostas"><span class="ico">▤</span><span>Propostas</span></button>
- <button class="nav" data-page="conversas"><span class="ico">☏</span><span>Conversas</span></button>
-
- <div class="group">OPERAÇÃO</div>
- <button class="nav" data-page="escritorio"><span class="ico">⌂</span><span>Escritório virtual</span></button>
- <button class="nav" data-page="agentes"><span class="ico">✧</span><span>Agentes IA</span></button>
- <button class="nav" data-page="simulacoes"><span class="ico">▣</span><span>Simulações CLT / FGTS</span></button>
- <button class="nav" data-page="alertas"><span class="ico">⚑</span><span>Alertas e atenção</span></button>
-
- <div class="group">WHATSAPP</div>
- <button class="nav" data-page="numeros"><span class="ico">▣</span><span>Números e conexões</span></button>
- <button class="nav" data-page="campanhas"><span class="ico">➤</span><span>Campanhas e disparos</span></button>
- <button class="nav" data-page="api"><span class="ico">⌘</span><span>API oficial</span></button>
-
- <div class="group">SISTEMA</div>
- <button class="nav" data-page="saude"><span class="ico">♥</span><span>Saúde dos serviços</span></button>
- <button class="nav" data-page="config"><span class="ico">⚙</span><span>Configurações</span></button>
-</aside>
-
-<main class="main">
- <header class="topbar">
-  <div class="crumb">GM CRED / <b id="crumb">Visão geral</b></div>
-  <div class="topright"><div class="status"><i></i>Modo demonstração</div><div class="avatar">GM</div></div>
- </header>
-
- <div class="demo">Dados ilustrativos para visualizar o novo layout. A conexão com o banco e as APIs será configurada após mapear os endpoints reais.</div>
-
- <section class="page active" id="dashboard">
-  <div class="heading">
-   <div><h1>Visão geral</h1><p>Acompanhe o desempenho da operação em um só lugar.</p></div>
-   <div class="filters"><select id="period"><option value="7">Últimos 7 dias</option><option value="30" selected>Últimos 30 dias</option><option value="90">Últimos 90 dias</option></select><button class="outline" onclick="refreshDemo()">↻ Atualizar</button></div>
+  <!-- LOGIN -->
+  <div class="login-veu" id="login">
+    <div class="login-box">
+      <div class="logo-lg">GM</div>
+      <h1>GM Cred · Escritório</h1>
+      <p>Digite a chave de acesso para ver os dados reais</p>
+      <input type="password" id="chaveIn" placeholder="Chave de acesso" autocomplete="current-password" />
+      <div class="chave-err" id="chaveErr"></div>
+      <button class="btn-pri" id="btnEntrar">Entrar</button>
+      <button class="btn-sec" id="btnDemo">Ver demonstração</button>
+    </div>
   </div>
-  <div class="grid kpis">
-   <div class="card"><span class="kpi-icon">R$</span><div class="kpi-label">Produção paga</div><div class="kpi-value" id="paid">R$ 86.450</div><div class="kpi-foot positive">↑ 18,4% <span>vs. período anterior</span></div></div>
-   <div class="card"><span class="kpi-icon">✓</span><div class="kpi-label">Contratos pagos</div><div class="kpi-value" id="contracts">34</div><div class="kpi-foot positive">↑ 12,2% <span>vs. período anterior</span></div></div>
-   <div class="card"><span class="kpi-icon">♙</span><div class="kpi-label">Leads recebidos</div><div class="kpi-value" id="leads">1.284</div><div class="kpi-foot">No período selecionado</div></div>
-   <div class="card"><span class="kpi-icon">%</span><div class="kpi-label">Conversão em pagos</div><div class="kpi-value" id="conversion">2,65%</div><div class="kpi-foot positive">↑ 0,4 p.p. <span>vs. período anterior</span></div></div>
+
+  <!-- TOPO -->
+  <header class="top">
+    <div class="marca">
+      <div class="logo">GM</div>
+      <div>
+        <h1 id="pgTit">Escritório</h1>
+        <p id="pgSub">GM Cred · Painel</p>
+      </div>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi"><b id="kAnd">—</b><span>Em andamento</span></div>
+      <div class="kpi"><b id="kPag">—</b><span>Pagos hoje</span></div>
+      <div class="kpi"><b id="kPar">—</b><span>Parados</span></div>
+    </div>
+
+    <div class="upd" id="upd"></div>
+
+    <button class="conn off" id="connBtn">
+      <i></i>
+      <span id="connTxt">Offline</span>
+    </button>
+  </header>
+
+  <div class="aviso" id="aviso" style="display:none"></div>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <nav class="nav" id="nav">
+        <button class="nv ativo" data-view="escritorio"><span class="ico">🏢</span><span class="lb">Escritório</span></button>
+        <button class="nv" data-view="clientes"><span class="ico">👥</span><span class="lb">Clientes</span><span class="badge" id="navBadge" hidden>0</span></button>
+        <button class="nv" data-view="agentes"><span class="ico">🤖</span><span class="lb">Agentes</span></button>
+        <button class="nv" data-view="conversas"><span class="ico">💬</span><span class="lb">Conversas</span></button>
+        <button class="nv" data-view="financeiro"><span class="ico">💰</span><span class="lb">Financeiro</span></button>
+        <button class="nv" data-view="numeros"><span class="ico">📱</span><span class="lb">Números</span></button>
+      </nav>
+      <div class="sb-fim">
+        <button class="nv" id="btnTema"><span class="ico">🌓</span><span class="lb">Tema</span></button>
+        <button class="nv" id="btnTeste"><span class="ico">🧪</span><span class="lb">Testes</span></button>
+        <button class="nv" id="btnSair"><span class="ico">🚪</span><span class="lb">Sair</span></button>
+      </div>
+    </aside>
+
+    <main class="content">
+      <!-- ESCRITÓRIO -->
+      <div class="view ativo" id="v-escritorio">
+        <section class="atencao" id="atencao" hidden>
+          <h3>⚠️ Precisa da sua atenção</h3>
+          <div id="listaAtencao"></div>
+        </section>
+
+        <section class="escritorio">
+          <div class="salas" id="salas"></div>
+        </section>
+
+        <section class="clientes-rapido">
+          <div class="sec-topo">
+            <h3>Clientes no escritório</h3>
+            <div class="chips" id="filtroSalas"></div>
+          </div>
+          <div class="lista-clientes" id="listaClientes"></div>
+        </section>
+      </div>
+
+      <!-- CLIENTES -->
+      <div class="view" id="v-clientes" hidden>
+        <div class="fbox">
+          <div class="crm-topo">
+            <h2>Clientes</h2>
+            <input type="search" id="crmBusca" placeholder="Buscar nome, CPF ou telefone..." />
+          </div>
+          <div class="chips" id="crmChips"></div>
+          <div id="crmLista" class="crm-lista"></div>
+        </div>
+      </div>
+
+      <!-- AGENTES -->
+      <div class="view" id="v-agentes" hidden>
+        <div class="fbox">
+          <h2>Agentes</h2>
+          <div class="ag-resumo" id="agResumo"></div>
+          <div class="ag-cards" id="agSetores"></div>
+        </div>
+      </div>
+
+      <!-- CONVERSAS / EVENTOS -->
+      <div class="view" id="v-conversas" hidden>
+        <div class="fbox">
+          <h2>Últimos eventos</h2>
+          <div id="listaConversas" class="lista-conversas"></div>
+        </div>
+      </div>
+
+      <!-- FINANCEIRO -->
+      <div class="view" id="v-financeiro" hidden>
+        <div class="fbox">
+          <h2>Financeiro</h2>
+          <div class="fin-kpis" id="finKpis"></div>
+          <div id="finTabela" class="tabela-wrap"></div>
+        </div>
+      </div>
+
+      <!-- NÚMEROS -->
+      <div class="view" id="v-numeros" hidden>
+        <div class="fbox">
+          <h2>Números WhatsApp</h2>
+          <div id="numerosLista" class="numeros-grid"></div>
+        </div>
+      </div>
+    </main>
   </div>
-  <div class="grid charts">
-   <div class="card"><div class="card-title"><h3>Produção ao longo do tempo</h3><span>Valor pago · R$</span></div><div class="chart-wrap"><canvas id="productionChart"></canvas></div></div>
-   <div class="card"><div class="card-title"><h3>Distribuição por produto</h3><span>Contratos pagos</span></div><div class="chart-wrap"><canvas id="productChart"></canvas></div></div>
+
+  <!-- Modal -->
+  <div class="modal-veu" id="modal" hidden>
+    <div class="modal">
+      <header>
+        <h3 id="modalTitulo">Detalhe</h3>
+        <button class="fechar" id="modalFechar">✕</button>
+      </header>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
   </div>
-  <div class="grid bottom-grid">
-   <div class="card"><div class="card-title"><h3>Funil comercial</h3><span>Últimos 30 dias</span></div><div class="metric-list">
-    <div class="metric-row"><span>Leads</span><div class="bar"><i style="width:100%"></i></div><b>1.284</b></div>
-    <div class="metric-row"><span>CPF recebido</span><div class="bar"><i style="width:62%"></i></div><b>796</b></div>
-    <div class="metric-row"><span>Com margem</span><div class="bar"><i style="width:35%"></i></div><b>449</b></div>
-    <div class="metric-row"><span>Propostas</span><div class="bar"><i style="width:17%"></i></div><b>218</b></div>
-    <div class="metric-row"><span>Assinados</span><div class="bar"><i style="width:5%"></i></div><b>64</b></div>
-    <div class="metric-row"><span>Pagos</span><div class="bar"><i style="width:3%"></i></div><b>34</b></div>
-   </div></div>
-   <div class="card"><div class="card-title"><h3>Meta diária</h3><span>Contratos pagos</span></div>
-    <div class="kpi-label">Produção de hoje</div><div class="kpi-value">R$ 5.840</div>
-    <div class="progress"><i style="width:83.4%"></i></div>
-    <div style="display:flex;justify-content:space-between;font-size:11px;color:#89909c;margin-top:9px"><span>83,4% atingido</span><b style="color:#333">Meta R$ 7.000</b></div>
-    <div style="margin-top:23px;padding-top:15px;border-top:1px solid var(--line)"><div class="kpi-label">Comissão estimada</div><div class="kpi-value" style="font-size:22px">R$ 4.260</div><div class="kpi-foot">Conforme tabela e contratos pagos</div></div>
-   </div>
-  </div>
-  <div class="content-card" style="margin-top:16px">
-   <div class="card-title"><h3>Últimos contratos</h3><span>Visão demonstrativa</span></div>
-   <div class="table-scroll"><table class="table"><thead><tr><th>Cliente</th><th>Produto</th><th>Valor liberado</th><th>Comissão</th><th>Status</th></tr></thead><tbody>
-   <tr><td>Cliente exemplo 01</td><td>CLT</td><td>R$ 3.200</td><td>R$ 224</td><td><span class="pill green">Pago</span></td></tr>
-   <tr><td>Cliente exemplo 02</td><td>FGTS</td><td>R$ 1.850</td><td>—</td><td><span class="pill yellow">Em análise</span></td></tr>
-   <tr><td>Cliente exemplo 03</td><td>CLT</td><td>R$ 2.500</td><td>R$ 175</td><td><span class="pill green">Pago</span></td></tr>
-   <tr><td>Cliente exemplo 04</td><td>CLT</td><td>R$ 4.100</td><td>—</td><td><span class="pill red">Pendente</span></td></tr>
-   </tbody></table></div>
-  </div>
- </section>
 
- <section class="page" id="financeiro">
-  <div class="heading"><div><h1>Financeiro</h1><p>Produção, comissões e resultado da operação.</p></div></div>
-  <div class="grid kpis">
-   <div class="card"><div class="kpi-label">Produção paga</div><div class="kpi-value">R$ 86.450</div><div class="kpi-foot">No período</div></div>
-   <div class="card"><div class="kpi-label">Comissões</div><div class="kpi-value">R$ 4.260</div><div class="kpi-foot">Calculadas por tabela</div></div>
-   <div class="card"><div class="kpi-label">Ticket médio</div><div class="kpi-value">R$ 2.542</div><div class="kpi-foot">Por contrato pago</div></div>
-   <div class="card"><div class="kpi-label">Contratos pagos</div><div class="kpi-value">34</div><div class="kpi-foot">No período</div></div>
-  </div>
-  <div class="card"><div class="card-title"><h3>Produção e comissão</h3><span>Exemplo</span></div><div class="chart-wrap"><canvas id="financeChart"></canvas></div></div>
- </section>
-
- <section class="page" id="metas">
-  <div class="heading"><div><h1>Metas e comissões</h1><p>Acompanhe metas e regras de remuneração.</p></div></div>
-  <div class="grid kpis">
-   <div class="card"><div class="kpi-label">Meta diária</div><div class="kpi-value">R$ 7.000</div></div>
-   <div class="card"><div class="kpi-label">Realizado hoje</div><div class="kpi-value">R$ 5.840</div></div>
-   <div class="card"><div class="kpi-label">Falta para meta</div><div class="kpi-value">R$ 1.160</div></div>
-   <div class="card"><div class="kpi-label">Atingimento</div><div class="kpi-value">83,4%</div></div>
-  </div>
-  <div class="content-card"><h3>Regras de comissão</h3><p>O banco, a quantidade de parcelas e a existência de seguro determinam o percentual aplicável. O cálculo considera o valor liberado e a tabela correspondente.</p></div>
- </section>
-
- <section class="page" id="leads">
-  <div class="heading"><div><h1>Leads e clientes</h1><p>Base de clientes e acompanhamento comercial.</p></div><button class="btn">+ Novo lead</button></div>
-  <div class="content-card"><h3>Gestão de leads</h3><p>Pesquisa, filtros, cadastro, origem, CPF, telefone, produto, setor, status e histórico do cliente.</p></div>
-  <div class="content-card"><h3>Origem dos clientes</h3><p>Separação entre tráfego, campanhas e contatos recebidos diretamente.</p></div>
- </section>
-
- <section class="page" id="funil">
-  <div class="heading"><div><h1>Funil de vendas</h1><p>Conversão por etapa e motivos de perda.</p></div></div>
-  <div class="card"><div class="card-title"><h3>Etapas do funil</h3><span>Últimos 30 dias</span></div><div class="chart-wrap"><canvas id="funnelChart"></canvas></div></div>
- </section>
-
- <section class="page" id="propostas">
-  <div class="heading"><div><h1>Propostas</h1><p>Formalização, análise, pagamento e cancelamentos.</p></div></div>
-  <div class="grid kpis">
-   <div class="card"><div class="kpi-label">Aguardando formalização</div><div class="kpi-value">12</div></div>
-   <div class="card"><div class="kpi-label">Formalizadas</div><div class="kpi-value">18</div></div>
-   <div class="card"><div class="kpi-label">Pagas</div><div class="kpi-value">34</div></div>
-   <div class="card"><div class="kpi-label">Canceladas</div><div class="kpi-value">5</div></div>
-  </div>
-  <div class="content-card"><h3>Acompanhamento de propostas</h3><p>Consulta de status, identificação de pendências e histórico de alterações. O status de pagamento deve vir da verificação real do contrato.</p></div>
- </section>
-
- <section class="page" id="conversas">
-  <div class="heading"><div><h1>Conversas</h1><p>Atendimento, histórico e transferência para humano.</p></div></div>
-  <div class="content-card"><h3>Central de atendimento</h3><p>Lista de conversas, mensagens recebidas e enviadas, responsável, setor, situação do cliente e ações de atendimento.</p></div>
- </section>
-
- <section class="page" id="escritorio">
-  <div class="heading"><div><h1>Escritório virtual</h1><p>Setores, agentes e movimentação dos clientes.</p></div></div>
-  <div class="grid cards-3">
-   <div class="module"><div class="mi">♙</div><div><b>Recepção</b><small>Entrada e qualificação</small></div></div>
-   <div class="module"><div class="mi">▣</div><div><b>Simulação</b><small>Consultas e ofertas</small></div></div>
-   <div class="module"><div class="mi">◎</div><div><b>Vendas</b><small>Negociação e fechamento</small></div></div>
-   <div class="module"><div class="mi">✍</div><div><b>Formalização</b><small>Assinaturas e propostas</small></div></div>
-   <div class="module"><div class="mi">✓</div><div><b>Pós-venda</b><small>Pagamento e indicações</small></div></div>
-   <div class="module"><div class="mi">♛</div><div><b>Gerente</b><small>Supervisão e recuperação</small></div></div>
-  </div>
- </section>
-
- <section class="page" id="agentes">
-  <div class="heading"><div><h1>Agentes IA</h1><p>Configuração, desempenho e instruções dos agentes.</p></div></div>
-  <div class="content-card"><h3>Gestão de agentes</h3><p>Agentes por setor, modelos, instruções, ferramentas, versões de prompt, métricas e placar de desempenho.</p></div>
- </section>
-
- <section class="page" id="simulacoes">
-  <div class="heading"><div><h1>Simulações CLT e FGTS</h1><p>Consultas, ofertas e acompanhamento.</p></div></div>
-  <div class="grid cards-3">
-   <div class="module"><div class="mi">▣</div><div><b>Crédito CLT</b><small>Consulta e simulação via HUB</small></div></div>
-   <div class="module"><div class="mi">◈</div><div><b>FGTS</b><small>HUB Crédito e fluxo de autorização</small></div></div>
-   <div class="module"><div class="mi">↻</div><div><b>Reprocessamento</b><small>Fila e consultas pendentes</small></div></div>
-  </div>
- </section>
-
- <section class="page" id="alertas">
-  <div class="heading"><div><h1>Alertas e atenção</h1><p>Itens que precisam de intervenção.</p></div></div>
-  <div class="content-card"><h3>Central de alertas</h3><p>Clientes aguardando atendimento humano, propostas pendentes, números desconectados, falhas de consulta e clientes parados além do SLA.</p></div>
- </section>
-
- <section class="page" id="numeros">
-  <div class="heading"><div><h1>Números e conexões</h1><p>Instâncias WhatsApp, QR Code e status de conexão.</p></div></div>
-  <div class="content-card"><h3>Gerenciamento de números</h3><p>Evolution API e WAHA, criação de instâncias, conexão, reconexão, função do número e monitoramento.</p></div>
- </section>
-
- <section class="page" id="campanhas">
-  <div class="heading"><div><h1>Campanhas e disparos</h1><p>Campanhas, listas, mensagens e resultados.</p></div></div>
-  <div class="grid kpis">
-   <div class="card"><div class="kpi-label">Enviadas</div><div class="kpi-value">—</div></div>
-   <div class="card"><div class="kpi-label">Entregues</div><div class="kpi-value">—</div></div>
-   <div class="card"><div class="kpi-label">Lidas</div><div class="kpi-value">—</div></div>
-   <div class="card"><div class="kpi-label">Respostas</div><div class="kpi-value">—</div></div>
-  </div>
-  <div class="content-card"><h3>Gestão de campanhas</h3><p>Disparos convencionais, mensagens com imagem e botões, contatos, filas e acompanhamento por número.</p></div>
- </section>
-
- <section class="page" id="api">
-  <div class="heading"><div><h1>API oficial</h1><p>Templates Meta e campanhas oficiais.</p></div></div>
-  <div class="content-card"><h3>WhatsApp Cloud API</h3><p>Configuração de Phone Number ID, WABA, templates, campanhas, entregas, leituras, cliques e respostas. O token permanece protegido no servidor.</p></div>
- </section>
-
- <section class="page" id="saude">
-  <div class="heading"><div><h1>Saúde dos serviços</h1><p>Monitoramento das integrações e serviços.</p></div></div>
-  <div class="grid cards-3">
-   <div class="module"><div class="mi">♥</div><div><b>PostgreSQL</b><small>Verificação de conexão</small></div></div>
-   <div class="module"><div class="mi">↗</div><div><b>HUB Crédito</b><small>Consultas e autenticação</small></div></div>
-   <div class="module"><div class="mi">☏</div><div><b>WhatsApp</b><small>Instâncias e filas</small></div></div>
-  </div>
- </section>
-
- <section class="page" id="config">
-  <div class="heading"><div><h1>Configurações</h1><p>Preferências e parâmetros do sistema.</p></div></div>
-  <div class="content-card"><h3>Configurações gerais</h3><p>Metas, tabelas de comissão, parâmetros de atendimento, configurações de campanhas, integrações e acesso ao painel.</p></div>
- </section>
-</main>
-</div>
-<script>
-const navs=document.querySelectorAll(".nav");
-const pages=document.querySelectorAll(".page");
-const labels={
- dashboard:"Visão geral",financeiro:"Financeiro",metas:"Metas e comissões",
- leads:"Leads e clientes",funil:"Funil de vendas",propostas:"Propostas",
- conversas:"Conversas",escritorio:"Escritório virtual",agentes:"Agentes IA",
- simulacoes:"Simulações CLT / FGTS",alertas:"Alertas e atenção",
- numeros:"Números e conexões",campanhas:"Campanhas e disparos",
- api:"API oficial",saude:"Saúde dos serviços",config:"Configurações"
-};
-navs.forEach(btn=>btn.addEventListener("click",()=>{
- navs.forEach(n=>n.classList.remove("active"));
- btn.classList.add("active");
- pages.forEach(p=>p.classList.toggle("active",p.id===btn.dataset.page));
- document.getElementById("crumb").textContent=labels[btn.dataset.page];
- window.scrollTo({top:0,behavior:"smooth"});
- if(btn.dataset.page==="financeiro")setTimeout(()=>{},100);
-}));
-Chart.defaults.font.family="Inter";
-Chart.defaults.color="#9299a4";
-Chart.defaults.plugins.legend.labels.usePointStyle=true;
-const gold="#c9a23b",green="#159b69",blue="#4778d5";
-let productionChart,productChart,financeChart,funnelChart;
-function createCharts(){
- const days=["01","03","05","07","09","11","13","15","17","19","21","23","25","27","29"];
- const values=[1800,3200,2700,4800,3500,6200,4100,5900,3800,7200,6100,4800,8300,6900,9200];
- productionChart=new Chart(document.getElementById("productionChart"),{
-  type:"line",data:{labels:days,datasets:[{label:"Produção",data:values,borderColor:gold,backgroundColor:"rgba(201,162,59,.10)",fill:true,tension:.38,pointRadius:2,pointHoverRadius:5,borderWidth:2}]},
-  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:"#f0f1f3"},ticks:{callback:v=>"R$ "+v.toLocaleString("pt-BR")}}}}
- });
- productChart=new Chart(document.getElementById("productChart"),{
-  type:"doughnut",data:{labels:["CLT","FGTS"],datasets:[{data:[24,10],backgroundColor:[gold,blue],borderWidth:0,hoverOffset:5}]},
-  options:{responsive:true,maintainAspectRatio:false,cutout:"72%",plugins:{legend:{position:"bottom"}}}
- });
- financeChart=new Chart(document.getElementById("financeChart"),{
-  type:"bar",data:{labels:["Sem 1","Sem 2","Sem 3","Sem 4"],datasets:[
-   {label:"Produção paga",data:[16000,21000,18500,30950],backgroundColor:gold,borderRadius:5},
-   {label:"Comissão",data:[850,1120,970,1320],backgroundColor:green,borderRadius:5}
-  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom"}},scales:{x:{grid:{display:false}},y:{grid:{color:"#f0f1f3"}}}}
- });
- funnelChart=new Chart(document.getElementById("funnelChart"),{
-  type:"bar",data:{labels:["Leads","CPF recebido","Com margem","Propostas","Assinados","Pagos"],datasets:[{label:"Clientes",data:[1284,796,449,218,64,34],backgroundColor:[gold,"#d1b35e","#b8a06a","#8e9bb1","#6d8bc1",green],borderRadius:6}]},
-  options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:"#f0f1f3"}},y:{grid:{display:false}}}}
- });
-}
-function refreshDemo(){
- const p=document.getElementById("period").value;
- const factor=p==="7"?.31:p==="90"?2.7:1;
- document.getElementById("paid").textContent="R$ "+Math.round(86450*factor).toLocaleString("pt-BR");
- document.getElementById("contracts").textContent=Math.round(34*factor);
- document.getElementById("leads").textContent=Math.round(1284*factor).toLocaleString("pt-BR");
- document.getElementById("conversion").textContent="2,65%";
-}
-document.getElementById("period").addEventListener("change",refreshDemo);
-createCharts();
-</script>
+  <script src="app.js"></script>
 </body>
 </html>
